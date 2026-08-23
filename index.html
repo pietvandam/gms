@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regio Utrecht — Nederlandse GTA V Hulpdiensten Roleplay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-0:#0a0f1a;
+    --navy-1:#0f1729;
+    --navy-2:#152036;
+    --line-dark: rgba(232,235,244,0.10);
+    --line-dark-strong: rgba(232,235,244,0.18);
+    --paper:#f2ede1;
+    --paper-2:#e9e2d2;
+    --ink:#171512;
+    --ink-soft:#4a463e;
+    --red:#c81e3a;
+    --red-dim:#8f1529;
+    --amber:#f0a63a;
+    --green:#3fae6a;
+    --text-dim: rgba(232,235,244,0.62);
+    --text-dimmer: rgba(232,235,244,0.40);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--navy-0);
+    color:#eceef2;
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  h1,h2,h3,h4{
+    font-family:'Oswald',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.01em;
+    margin:0;
+    font-weight:600;
+  }
+  .mono{ font-family:'JetBrains Mono',monospace; }
+  a{ color:inherit; }
+  img{max-width:100%;display:block;}
+
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 28px; }
+
+  /* ===== Focus visibility ===== */
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--amber);
+    outline-offset:3px;
+  }
+
+  /* ===== Top alert bar ===== */
+  .alertbar{
+    background:var(--red);
+    color:#fff;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12.5px;
+    letter-spacing:0.03em;
+    padding:7px 0;
+    overflow:hidden;
+    white-space:nowrap;
+    border-bottom:1px solid rgba(0,0,0,0.2);
+  }
+  .alertbar__track{
+    display:inline-flex;
+    gap:48px;
+    animation: scrollbar 26s linear infinite;
+    padding-left:100%;
+  }
+  @keyframes scrollbar{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-100%); }
+  }
+
+  /* ===== Nav ===== */
+  header{
+    position:sticky; top:0; z-index:100;
+    background:rgba(10,15,26,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line-dark);
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 28px;
+    max-width:1180px; margin:0 auto;
+  }
+  .brand{
+    display:flex; align-items:center; gap:12px;
+    font-family:'Oswald',sans-serif;
+    font-weight:700;
+    font-size:19px;
+    letter-spacing:0.02em;
+    text-decoration:none;
+  }
+  .brand__badge{
+    width:34px;height:34px;
+    border:2px solid var(--amber);
+    display:flex;align-items:center;justify-content:center;
+    position:relative;
+    flex-shrink:0;
+  }
+  .brand__badge::after{
+    content:"";
+    width:8px;height:8px;
+    background:var(--red);
+  }
+  .brand span.sub{
+    display:block;
+    font-family:'JetBrains Mono',monospace;
+    text-transform:none;
+    font-weight:400;
+    font-size:10px;
+    letter-spacing:0.08em;
+    color:var(--text-dimmer);
+    margin-top:2px;
+  }
+  .navlinks{ display:flex; gap:32px; list-style:none; margin:0; padding:0; }
+  .navlinks a{
+    text-decoration:none;
+    font-size:13.5px;
+    font-weight:600;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:var(--text-dim);
+    transition:color .15s ease;
+    position:relative;
+  }
+  .navlinks a:hover{ color:#fff; }
+  .nav-cta{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--red);
+    color:#fff !important;
+    padding:10px 18px;
+    text-decoration:none;
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:0.03em;
+    text-transform:uppercase;
+    border:1px solid var(--red);
+    transition: background .15s ease, transform .15s ease;
+  }
+  .nav-cta:hover{ background:#a91830; transform:translateY(-1px); }
+  .navtoggle{ display:none; background:none;border:1px solid var(--line-dark-strong); color:#fff; width:40px;height:40px; cursor:pointer; }
+
+  /* ===== Hero ===== */
+  .hero{
+    position:relative;
+    padding:96px 0 70px;
+    overflow:hidden;
+    border-bottom:1px solid var(--line-dark);
+    background:
+      radial-gradient(ellipse 900px 500px at 80% -10%, rgba(200,30,58,0.14), transparent 60%),
+      var(--navy-0);
+  }
+  .hero-grid{
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(var(--line-dark) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-dark) 1px, transparent 1px);
+    background-size:56px 56px;
+    mask-image: radial-gradient(ellipse 800px 500px at 70% 20%, black, transparent 75%);
+    pointer-events:none;
+  }
+  .hero__inner{ position:relative; display:grid; grid-template-columns:1.15fr 0.85fr; gap:56px; align-items:center; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:9px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px; letter-spacing:0.08em;
+    color:var(--amber);
+    text-transform:uppercase;
+    margin-bottom:22px;
+  }
+  .eyebrow .dot{
+    width:8px;height:8px; border-radius:50%; background:var(--green);
+    box-shadow:0 0 0 0 rgba(63,174,106,0.6);
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse{
+    0%{ box-shadow:0 0 0 0 rgba(63,174,106,0.55); }
+    70%{ box-shadow:0 0 0 8px rgba(63,174,106,0); }
+    100%{ box-shadow:0 0 0 0 rgba(63,174,106,0); }
+  }
+  .hero h1{
+    font-size:clamp(38px, 5.4vw, 68px);
+    line-height:1.02;
+    color:#fff;
+  }
+  .hero h1 em{
+    font-style:normal;
+    color:var(--red);
+    -webkit-text-stroke:0;
+  }
+  .hero p.lede{
+    font-size:17px;
+    line-height:1.65;
+    color:var(--text-dim);
+    max-width:52ch;
+    margin-top:24px;
+    font-weight:400;
+  }
+  .hero__ctas{ display:flex; gap:14px; margin-top:34px; flex-wrap:wrap; }
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:15px 26px;
+    font-weight:700; font-size:14px;
+    text-transform:uppercase; letter-spacing:0.03em;
+    text-decoration:none;
+    border:1px solid transparent;
+    cursor:pointer;
+    transition:transform .15s ease, background .15s ease, border-color .15s ease;
+  }
+  .btn-primary{ background:var(--red); color:#fff; }
+  .btn-primary:hover{ background:#a91830; transform:translateY(-2px); }
+  .btn-ghost{ border-color:var(--line-dark-strong); color:#fff; background:transparent; }
+  .btn-ghost:hover{ border-color:#fff; transform:translateY(-2px); }
+
+  .hero__meta{ display:flex; gap:28px; margin-top:44px; flex-wrap:wrap; }
+  .hero__meta div{ font-family:'JetBrains Mono',monospace; }
+  .hero__meta .num{ font-size:22px; color:#fff; font-weight:600; }
+  .hero__meta .lbl{ font-size:11px; color:var(--text-dimmer); text-transform:uppercase; letter-spacing:0.06em; margin-top:2px;}
+
+  /* ==== dispatch panel (hero visual) ==== */
+  .panel{
+    background:var(--navy-1);
+    border:1px solid var(--line-dark-strong);
+    position:relative;
+  }
+  .panel__head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 16px;
+    border-bottom:1px solid var(--line-dark);
+    font-family:'JetBrains Mono',monospace;
+    font-size:11.5px;
+    color:var(--text-dimmer);
+    letter-spacing:0.05em;
+  }
+  .panel__head .live{ color:var(--green); display:flex; align-items:center; gap:6px; }
+  .panel__head .live .dot{ width:6px;height:6px;background:var(--green);border-radius:50%; animation:pulse 2s infinite;}
+  .panel__body{ padding:6px 0; height:340px; overflow:hidden; position:relative; }
+  .panel__body::after{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(to bottom, transparent 78%, var(--navy-1) 100%);
+    pointer-events:none;
+  }
+  .cad-feed{ display:flex; flex-direction:column; }
+  .cad-line{
+    display:grid; grid-template-columns:64px 92px 1fr auto;
+    gap:10px;
+    padding:9px 16px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    border-bottom:1px dashed var(--line-dark);
+    align-items:center;
+  }
+  .cad-line .t{ color:var(--text-dimmer); }
+  .cad-line .code{ color:var(--amber); font-weight:600; }
+  .cad-line .desc{ color:#dfe3ec; }
+  .cad-line .status{ font-size:10px; padding:2px 7px; text-transform:uppercase; letter-spacing:0.04em; justify-self:end;}
+  .status.open{ background:rgba(200,30,58,0.18); color:#ff7288; border:1px solid rgba(200,30,58,0.4);}
+  .status.busy{ background:rgba(240,166,58,0.16); color:var(--amber); border:1px solid rgba(240,166,58,0.35);}
+  .status.done{ background:rgba(63,174,106,0.16); color:#6bd393; border:1px solid rgba(63,174,106,0.35);}
+
+  /* ===== Section shells ===== */
+  section{ padding:100px 0; }
+  .section-dark{ background:var(--navy-0); border-bottom:1px solid var(--line-dark); }
+  .section-paper{ background:var(--paper); color:var(--ink); border-bottom:1px solid rgba(0,0,0,0.08); }
+  .kicker{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--red);
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:14px;
+  }
+  .kicker::before{ content:""; width:26px; height:2px; background:var(--red); display:inline-block; }
+  .section-dark .kicker{ color:var(--amber); }
+  .section-dark .kicker::before{ background:var(--amber); }
+  .sect-head{ max-width:640px; margin-bottom:56px; }
+  .sect-head h2{ font-size:clamp(28px,3.4vw,42px); line-height:1.08; }
+  .section-dark .sect-head h2{ color:#fff; }
+  .sect-head p{ margin-top:16px; font-size:16px; line-height:1.65; color:var(--ink-soft); }
+  .section-dark .sect-head p{ color:var(--text-dim); }
+
+  /* reveal on scroll */
+  .reveal{ opacity:0; transform:translateY(22px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  /* ===== Diensten (departments) ===== */
+  .diensten-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--line-dark-strong);
+    border:1px solid var(--line-dark-strong);
+  }
+  .dienst{
+    background:var(--navy-1);
+    padding:32px 26px;
+    display:flex; flex-direction:column; gap:14px;
+    transition:background .2s ease;
+  }
+  .dienst:hover{ background:var(--navy-2); }
+  .dienst__icon{
+    width:44px;height:44px;
+    border:1.5px solid var(--line-dark-strong);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--amber);
+  }
+  .dienst h3{ font-size:18px; color:#fff; }
+  .dienst .code{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dimmer); letter-spacing:0.06em; }
+  .dienst p{ font-size:14px; line-height:1.6; color:var(--text-dim); flex-grow:1; }
+  .dienst a{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px; text-decoration:none; color:var(--amber);
+    letter-spacing:0.03em;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .dienst a:hover{ color:#fff; }
+
+  /* ===== Waarom (features) on paper ===== */
+  .feat-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:36px; }
+  .feat{ border-top:2px solid var(--ink); padding-top:18px; }
+  .feat .fn{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--red); margin-bottom:10px; display:block;}
+  .feat h3{ font-size:19px; color:var(--ink); margin-bottom:10px; text-transform:none; letter-spacing:0; font-weight:700;}
+  .feat p{ font-size:14.5px; line-height:1.65; color:var(--ink-soft); margin:0; }
+
+  /* ===== Live meldkamer signature section ===== */
+  .meldkamer{
+    background:var(--navy-1);
+    position:relative;
+  }
+  .mk-terminal{
+    border:1px solid var(--line-dark-strong);
+    background:#080c14;
+    box-shadow:0 30px 80px -30px rgba(0,0,0,0.6);
+  }
+  .mk-bar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:13px 18px;
+    border-bottom:1px solid var(--line-dark);
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    color:var(--text-dimmer);
+  }
+  .mk-bar .dots{ display:flex; gap:6px; }
+  .mk-bar .dots span{ width:9px;height:9px;border-radius:50%; display:inline-block; }
+  .mk-bar .dots span:nth-child(1){ background:#c81e3a; }
+  .mk-bar .dots span:nth-child(2){ background:#f0a63a; }
+  .mk-bar .dots span:nth-child(3){ background:#3fae6a; }
+  .mk-ticker{ height:420px; overflow:hidden; position:relative; }
+  .mk-ticker::before{
+    content:""; position:absolute; top:0; left:0; right:0; height:24px;
+    background:linear-gradient(#080c14, transparent); z-index:2;
+  }
+  .mk-ticker::after{
+    content:""; position:absolute; bottom:0; left:0; right:0; height:40px;
+    background:linear-gradient(transparent, #080c14); z-index:2;
+  }
+  .mk-scroll{ animation:mkscroll 22s linear infinite; }
+  .mk-ticker:hover .mk-scroll{ animation-play-state:paused; }
+  @keyframes mkscroll{
+    0%{ transform:translateY(0); }
+    100%{ transform:translateY(-50%); }
+  }
+  .mk-row{
+    padding:14px 22px;
+    display:grid; grid-template-columns:150px 90px 1fr;
+    gap:16px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    border-bottom:1px solid var(--line-dark);
+    align-items:baseline;
+  }
+  .mk-row .ts{ color:var(--text-dimmer); }
+  .mk-row .unit{ color:var(--amber); }
+  .mk-row .msg{ color:#e5e8f0; }
+  .mk-row .loc{ color:var(--text-dimmer); }
+
+  .meldkamer__side h2{ color:#fff; }
+  .meldkamer .grid2{ display:grid; grid-template-columns:0.9fr 1.1fr; gap:60px; align-items:center; }
+  .mk-stats{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:34px; }
+  .mk-stat{ border:1px solid var(--line-dark-strong); padding:16px 18px; }
+  .mk-stat .n{ font-family:'JetBrains Mono',monospace; font-size:24px; color:var(--amber); font-weight:600; }
+  .mk-stat .l{ font-size:11.5px; color:var(--text-dimmer); text-transform:uppercase; letter-spacing:0.05em; margin-top:4px;}
+
+  /* ===== Stappen (join steps) ===== */
+  .steps{ counter-reset: stepnum; display:grid; grid-template-columns:repeat(4,1fr); gap:0; border-top:1px solid rgba(0,0,0,0.12); }
+  .step{
+    counter-increment: stepnum;
+    padding:30px 24px 30px 0;
+    border-right:1px solid rgba(0,0,0,0.12);
+    position:relative;
+  }
+  .step:last-child{ border-right:none; }
+  .step::before{
+    content: counter(stepnum, decimal-leading-zero);
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    color:var(--red);
+    display:block;
+    margin-bottom:14px;
+  }
+  .step h3{ font-size:16.5px; color:var(--ink); text-transform:none; letter-spacing:0; margin-bottom:8px; font-weight:700;}
+  .step p{ font-size:14px; color:var(--ink-soft); line-height:1.6; margin:0;}
+
+  /* ===== Testimonials ===== */
+  .quotes{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line-dark-strong); border:1px solid var(--line-dark-strong); }
+  .quote{ background:var(--navy-1); padding:30px 28px; }
+  .quote p{ font-size:15px; line-height:1.7; color:#dfe3ec; margin:0 0 20px; }
+  .quote .who{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--amber); }
+  .quote .role{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dimmer); margin-top:2px; }
+
+  /* ===== CTA banner ===== */
+  .cta-banner{
+    background:linear-gradient(120deg, var(--red-dim), var(--red));
+    padding:70px 0;
+    text-align:center;
+  }
+  .cta-banner h2{ color:#fff; font-size:clamp(26px,4vw,42px); }
+  .cta-banner p{ color:rgba(255,255,255,0.85); max-width:56ch; margin:16px auto 30px; font-size:15.5px; line-height:1.6; }
+  .cta-banner .btn-ghost{ border-color:rgba(255,255,255,0.5); }
+  .cta-banner .btn-ghost:hover{ border-color:#fff; }
+  .cta-banner .btn-white{ background:#fff; color:var(--red); }
+  .cta-banner .btn-white:hover{ background:#f2e9e9; transform:translateY(-2px); }
+
+  /* ===== Footer ===== */
+  footer{ background:var(--navy-0); padding:60px 0 30px; }
+  .foot-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px; padding-bottom:44px; border-bottom:1px solid var(--line-dark); }
+  .foot-grid h4{ color:#fff; font-size:13px; letter-spacing:0.06em; margin-bottom:16px; }
+  .foot-grid ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
+  .foot-grid a{ text-decoration:none; color:var(--text-dim); font-size:13.5px; }
+  .foot-grid a:hover{ color:#fff; }
+  .foot-grid p{ color:var(--text-dim); font-size:13.5px; line-height:1.65; max-width:34ch; }
+  .foot-bottom{ display:flex; justify-content:space-between; align-items:center; padding-top:26px; flex-wrap:wrap; gap:12px;}
+  .foot-bottom p{ font-size:12px; color:var(--text-dimmer); margin:0; }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 980px){
+    .hero__inner{ grid-template-columns:1fr; }
+    .diensten-grid{ grid-template-columns:repeat(2,1fr); }
+    .feat-grid{ grid-template-columns:1fr 1fr; }
+    .meldkamer .grid2{ grid-template-columns:1fr; }
+    .quotes{ grid-template-columns:1fr; }
+    .steps{ grid-template-columns:1fr 1fr; }
+    .step{ border-bottom:1px solid rgba(0,0,0,0.12); }
+    .foot-grid{ grid-template-columns:1fr 1fr; }
+  }
+  @media (max-width: 700px){
+    .navlinks{ display:none; }
+    .navtoggle{ display:block; }
+    .diensten-grid{ grid-template-columns:1fr; }
+    .feat-grid{ grid-template-columns:1fr; }
+    .steps{ grid-template-columns:1fr; }
+    .foot-grid{ grid-template-columns:1fr; }
+    .hero__meta{ gap:20px; }
+    section{ padding:70px 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="alertbar mono">
+  <div class="alertbar__track" aria-hidden="true">
+    <span>112-STATUS: MELDKAMER UTRECHT OPERATIONEEL</span>
+    <span>WHITELIST: OPEN VOOR NIEUWE AANMELDINGEN</span>
+    <span>DISCORD: 3.400+ LEDEN ONLINE</span>
+    <span>SESSIES: DAGELIJKS VANAF 19:00</span>
+    <span>112-STATUS: MELDKAMER UTRECHT OPERATIONEEL</span>
+    <span>WHITELIST: OPEN VOOR NIEUWE AANMELDINGEN</span>
+    <span>DISCORD: 3.400+ LEDEN ONLINE</span>
+    <span>SESSIES: DAGELIJKS VANAF 19:00</span>
+  </div>
+</div>
+
+<header>
+  <nav>
+    <a href="#top" class="brand">
+      <span class="brand__badge" aria-hidden="true"></span>
+      <span>REGIO UTRECHT<span class="sub">GTA V HULPDIENSTEN ROLEPLAY</span></span>
+    </a>
+    <ul class="navlinks">
+      <li><a href="#diensten">Diensten</a></li>
+      <li><a href="#waarom">Waarom wij</a></li>
+      <li><a href="#meldkamer">Meldkamer</a></li>
+      <li><a href="#aanmelden">Aanmelden</a></li>
+      <li><a href="#regels">Regels</a></li>
+    </ul>
+    <a href="#aanmelden" class="nav-cta">Join Discord</a>
+    <button class="navtoggle" aria-label="Menu openen">☰</button>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid" aria-hidden="true"></div>
+    <div class="wrap hero__inner">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> LIVE — SESSIE ACTIEF</div>
+        <h1>Utrecht rekent<br>op <em>jou.</em></h1>
+        <p class="lede">Regio Utrecht is een Nederlandse GTA V roleplaycommunity die de hulpdiensten van de provincie Utrecht op serieuze wijze naspeelt. Politie, ambulance, brandweer en burgers — één stad, één regio, ontelbaar veel verhalen.</p>
+        <div class="hero__ctas">
+          <a href="#aanmelden" class="btn btn-primary">Word lid op Discord</a>
+          <a href="#diensten" class="btn btn-ghost">Bekijk de diensten</a>
+        </div>
+        <div class="hero__meta">
+          <div><div class="num">2021</div><div class="lbl">Opgericht</div></div>
+          <div><div class="num">3.400+</div><div class="lbl">Community leden</div></div>
+          <div><div class="num">4</div><div class="lbl">Actieve diensten</div></div>
+          <div><div class="num">7/7</div><div class="lbl">Dagen per week live</div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel__head">
+          <span>MELDKAMER — REGIO UTRECHT</span>
+          <span class="live"><span class="dot"></span> LIVE FEED</span>
+        </div>
+        <div class="panel__body">
+          <div class="cad-feed">
+            <div class="cad-line"><span class="t">19:42</span><span class="code">10-54</span><span class="desc">Aanrijding twee voertuigen, A2 bij Nieuwegein</span><span class="status open">Openstaand</span></div>
+            <div class="cad-line"><span class="t">19:39</span><span class="code">B-112</span><span class="desc">Brand in keuken, Wijk bij Duurstede</span><span class="status busy">Onderweg</span></div>
+            <div class="cad-line"><span class="t">19:35</span><span class="code">A-023</span><span class="desc">Reanimatie gemeld, Kanaleneiland</span><span class="status busy">Ter plaatse</span></div>
+            <div class="cad-line"><span class="t">19:28</span><span class="code">10-31</span><span class="desc">Inbraak in woning, Overvecht</span><span class="status done">Afgehandeld</span></div>
+            <div class="cad-line"><span class="t">19:21</span><span class="code">10-80</span><span class="desc">Achtervolging richting Bunnik</span><span class="status open">Openstaand</span></div>
+            <div class="cad-line"><span class="t">19:14</span><span class="code">A-011</span><span class="desc">Val van hoogte, bouwplaats Leidsche Rijn</span><span class="status done">Afgehandeld</span></div>
+            <div class="cad-line"><span class="t">19:08</span><span class="code">B-034</span><span class="desc">Stankoverlast na gasmelding, binnenstad</span><span class="status done">Afgehandeld</span></div>
+            <div class="cad-line"><span class="t">19:02</span><span class="code">10-16</span><span class="desc">Huiselijke twist, Zuilen</span><span class="status busy">Ter plaatse</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIENSTEN -->
+  <section class="section-dark" id="diensten">
+    <div class="wrap">
+      <div class="sect-head reveal">
+        <div class="kicker">Onze diensten</div>
+        <h2>Kies je rol in de regio</h2>
+        <p>Elke dienst heeft een eigen structuur, opleidingstraject en procedures — gebaseerd op hoe het er in het echt aan toegaat. Begin onderaan en werk je omhoog, of kies voor het bestaan van een gewone Utrechtse burger.</p>
+      </div>
+      <div class="diensten-grid">
+        <div class="dienst reveal">
+          <div class="dienst__icon">👮</div>
+          <span class="code">EENHEID-UTRECHT</span>
+          <h3>Politie</h3>
+          <p>Van basisteam tot motorbrigade. Handhaving, opsporing en verkeerstoezicht in de hele regio, met echte briefings en portofonieprocedures.</p>
+          <a href="#aanmelden">Solliciteer &rarr;</a>
+        </div>
+        <div class="dienst reveal">
+          <div class="dienst__icon">🚑</div>
+          <span class="code">RAV-UTRECHT</span>
+          <h3>Ambulancezorg</h3>
+          <p>Triage, spoedritten en samenwerking met de meldkamer. Leer protocollen die aansluiten op hoe Nederlandse ambulancediensten echt werken.</p>
+          <a href="#aanmelden">Solliciteer &rarr;</a>
+        </div>
+        <div class="dienst reveal">
+          <div class="dienst__icon">🚒</div>
+          <span class="code">BRANDWEER-UTRECHT</span>
+          <h3>Brandweer</h3>
+          <p>Van eerste uitruk tot grootschalig incident. Blussen, redden en adviseren — inclusief kazerneleven tussen de meldingen door.</p>
+          <a href="#aanmelden">Solliciteer &rarr;</a>
+        </div>
+        <div class="dienst reveal">
+          <div class="dienst__icon">🏙️</div>
+          <span class="code">BURGER-UTRECHT</span>
+          <h3>Burgers &amp; bedrijven</h3>
+          <p>Start een onderneming, werk een eerlijke baan of bouw je eigen verhaal op straat. Geen dienst verplicht — de stad heeft iedereen nodig.</p>
+          <a href="#aanmelden">Solliciteer &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAAROM -->
+  <section class="section-paper" id="waarom">
+    <div class="wrap">
+      <div class="sect-head reveal">
+        <div class="kicker">Waarom Regio Utrecht</div>
+        <h2>Realisme is geen extra, het is het fundament</h2>
+        <p>Wij bouwen niet aan een server, we bouwen aan een provincie. Elke keuze — van opleiding tot regelgeving — staat in dienst van een geloofwaardige ervaring.</p>
+      </div>
+      <div class="feat-grid">
+        <div class="feat reveal">
+          <span class="fn">01 — OPLEIDING</span>
+          <h3>Echte procedures, geen giswerk</h3>
+          <p>Nieuwe leden doorlopen een opleiding die is gebaseerd op bestaande Nederlandse protocollen, begeleid door mensen met kennis van het vak.</p>
+        </div>
+        <div class="feat reveal">
+          <span class="fn">02 — TOEGANG</span>
+          <h3>Geen pay-to-play</h3>
+          <p>Plek in een dienst verdien je met inzet en kennis, niet met een betaling. Donaties ondersteunen alleen de serverkosten.</p>
+        </div>
+        <div class="feat reveal">
+          <span class="fn">03 — STAFF</span>
+          <h3>Actief en aanspreekbaar</h3>
+          <p>Ons staffteam bemant de meldkamer, bewaakt de regels en is dagelijks bereikbaar op Discord voor vragen, meldingen en klachten.</p>
+        </div>
+        <div class="feat reveal">
+          <span class="fn">04 — WERELD</span>
+          <h3>Eén samenhangende regio</h3>
+          <p>Utrecht, Nieuwegein, Zeist en omstreken zijn met elkaar verbonden. Wat er in de ene wijk gebeurt, heeft gevolgen elders in de provincie.</p>
+        </div>
+        <div class="feat reveal">
+          <span class="fn">05 — SCRIPTS</span>
+          <h3>Op maat gebouwde systemen</h3>
+          <p>Van een eigen CAD-systeem tot realistische voertuigschade — onze ontwikkelaars bouwen tools die roleplay ondersteunen, niet vervangen.</p>
+        </div>
+        <div class="feat reveal">
+          <span class="fn">06 — GEMEENSCHAP</span>
+          <h3>Gezelligheid staat voorop</h3>
+          <p>Naast serieuze roleplay is er ruimte voor evenementen, borrels-in-character en gewoon een goed gesprek op de bank van het bureau.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MELDKAMER SIGNATURE -->
+  <section class="meldkamer" id="meldkamer">
+    <div class="wrap">
+      <div class="grid2">
+        <div class="reveal meldkamer__side">
+          <div class="kicker">Live uit de meldkamer</div>
+          <h2>Dit is Utrecht, terwijl jij dit leest</h2>
+          <p style="color:var(--text-dim); margin-top:16px; font-size:15.5px; line-height:1.7;">
+            De meldkamer draait zodra de sessie live is. Meldingen worden verdeeld over politie, ambulance en brandweer, en elke eenheid reageert op basis van prioriteit en beschikbaarheid — net als in het echt.
+          </p>
+          <div class="mk-stats">
+            <div class="mk-stat"><div class="n">180+</div><div class="l">Meldingen per sessie</div></div>
+            <div class="mk-stat"><div class="n">&lt;90s</div><div class="l">Gem. uitruktijd</div></div>
+            <div class="mk-stat"><div class="n">3</div><div class="l">Diensten gekoppeld</div></div>
+            <div class="mk-stat"><div class="n">24</div><div class="l">Dispatchers actief</div></div>
+          </div>
+        </div>
+
+        <div class="reveal mk-terminal">
+          <div class="mk-bar">
+            <span>cad@meldkamer-utrecht:~$ tail -f meldingen.log</span>
+            <div class="dots"><span></span><span></span><span></span></div>
+          </div>
+          <div class="mk-ticker">
+            <div class="mk-scroll">
+              <div class="mk-row"><span class="ts">20:11:04</span><span class="unit">P-204</span><span class="msg">Snelheidscontrole opgezet <span class="loc">— N417, Bunnik</span></span></div>
+              <div class="mk-row"><span class="ts">20:09:41</span><span class="unit">A-011</span><span class="msg">Patiënt overgedragen aan spoedeisende hulp <span class="loc">— UMC Utrecht</span></span></div>
+              <div class="mk-row"><span class="ts">20:07:58</span><span class="unit">B-102</span><span class="msg">Brand onder controle, nablussen gestart <span class="loc">— Wijk bij Duurstede</span></span></div>
+              <div class="mk-row"><span class="ts">20:05:22</span><span class="unit">P-118</span><span class="msg">Verdachte aangehouden na korte achtervolging <span class="loc">— Bunnik</span></span></div>
+              <div class="mk-row"><span class="ts">20:02:37</span><span class="unit">A-006</span><span class="msg">Melding reanimatie, spoedrit gestart <span class="loc">— Kanaleneiland</span></span></div>
+              <div class="mk-row"><span class="ts">19:58:15</span><span class="unit">DISP</span><span class="msg">Alle eenheden: verhoogde drukte binnenstad door evenement</span></div>
+              <div class="mk-row"><span class="ts">19:55:03</span><span class="unit">P-092</span><span class="msg">Ter plaatse bij inbraakmelding <span class="loc">— Overvecht</span></span></div>
+              <div class="mk-row"><span class="ts">19:51:47</span><span class="unit">B-034</span><span class="msg">Gasmelding afgehandeld, pand vrijgegeven <span class="loc">— Binnenstad</span></span></div>
+              <div class="mk-row"><span class="ts">19:48:12</span><span class="unit">A-023</span><span class="msg">Onderweg naar val van hoogte <span class="loc">— Leidsche Rijn</span></span></div>
+              <div class="mk-row"><span class="ts">19:44:36</span><span class="unit">P-204</span><span class="msg">Achtervolging beëindigd, richting Bunnik</span></div>
+              <!-- duplicate set for seamless loop -->
+              <div class="mk-row" aria-hidden="true"><span class="ts">20:11:04</span><span class="unit">P-204</span><span class="msg">Snelheidscontrole opgezet <span class="loc">— N417, Bunnik</span></span></div>
+              <div class="mk-row" aria-hidden="true"><span class="ts">20:09:41</span><span class="unit">A-011</span><span class="msg">Patiënt overgedragen aan spoedeisende hulp <span class="loc">— UMC Utrecht</span></span></div>
+              <div class="mk-row" aria-hidden="true"><span class="ts">20:07:58</span><span class="unit">B-102</span><span class="msg">Brand onder controle, nablussen gestart <span class="loc">— Wijk bij Duurstede</span></span></div>
+              <div class="mk-row" aria-hidden="true"><span class="ts">20:05:22</span><span class="unit">P-118</span><span class="msg">Verdachte aangehouden na korte achtervolging <span class="loc">— Bunnik</span></span></div>
+              <div class="mk-row" aria-hidden="true"><span class="ts">20:02:37</span><span class="unit">A-006</span><span class="msg">Melding reanimatie, spoedrit gestart <span class="loc">— Kanaleneiland</span></span></div>
+              <div class="mk-row" aria-hidden="true"><span class="ts">19:58:15</span><span class="unit">DISP</span><span class="msg">Alle eenheden: verhoogde drukte binnenstad door evenement</span></div>
+              <div class="mk-row" aria-hidden="true"><span class="ts">19:55:03</span><span class="unit">P-092</span><span class="msg">Ter plaatse bij inbraakmelding <span class="loc">— Overvecht</span></span></div>
+              <div class="mk-row" aria-hidden="true"><span class="ts">19:51:47</span><span class="unit">B-034</span><span class="msg">Gasmelding afgehandeld, pand vrijgegeven <span class="loc">— Binnenstad</span></span></div>
+              <div class="mk-row" aria-hidden="true"><span class="ts">19:48:12</span><span class="unit">A-023</span><span class="msg">Onderweg naar val van hoogte <span class="loc">— Leidsche Rijn</span></span></div>
+              <div class="mk-row" aria-hidden="true"><span class="ts">19:44:36</span><span class="unit">P-204</span><span class="msg">Achtervolging beëindigd, richting Bunnik</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAPPEN -->
+  <section class="section-paper" id="aanmelden">
+    <div class="wrap">
+      <div class="sect-head reveal">
+        <div class="kicker">Zo doe je mee</div>
+        <h2>Van burger tot dienstdoend in vier stappen</h2>
+      </div>
+      <div class="steps reveal">
+        <div class="step">
+          <h3>Installeer FiveM</h3>
+          <p>Download de FiveM-client en koppel deze aan je eigen, legale kopie van GTA V.</p>
+        </div>
+        <div class="step">
+          <h3>Join de Discord</h3>
+          <p>Lees het welkomstbericht, doorloop de leeftijdscontrole en krijg toegang tot de rest van de server.</p>
+        </div>
+        <div class="step">
+          <h3>Lees het reglement</h3>
+          <p>Ons reglement bepaalt de toon van de server. Ken je de regels, dan voorkom je verrassingen.</p>
+        </div>
+        <div class="step">
+          <h3>Maak je personage</h3>
+          <p>Stap de stad in als burger, of solliciteer direct bij een van de vier diensten.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTES -->
+  <section class="section-dark">
+    <div class="wrap">
+      <div class="sect-head reveal">
+        <div class="kicker">Uit de community</div>
+        <h2>Wat leden over de regio zeggen</h2>
+      </div>
+      <div class="quotes">
+        <div class="quote reveal">
+          <p>"Na drie maanden bij de politie-eenheid voelt elke dienst nog steeds anders. Geen enkele avond in Utrecht is hetzelfde."</p>
+          <div class="who">— Senna_V</div>
+          <div class="role">Hoofdagent, Eenheid Utrecht</div>
+        </div>
+        <div class="quote reveal">
+          <p>"De opleiding bij ambulance was pittiger dan ik verwachtte, in positieve zin. Je leert echt iets over triage."</p>
+          <div class="who">— Daan_K</div>
+          <div class="role">Ambulanceverpleegkundige</div>
+        </div>
+        <div class="quote reveal">
+          <p>"Ik speel puur als burger met een eigen bedrijf en voel me nog steeds volledig onderdeel van het verhaal."</p>
+          <div class="who">— Fem_Utr</div>
+          <div class="role">Ondernemer, Binnenstad</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGELS teaser -->
+  <section class="section-paper" id="regels">
+    <div class="wrap" style="display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start;">
+      <div class="reveal">
+        <div class="kicker">Reglement</div>
+        <h2>Duidelijke regels, voor iedereen gelijk</h2>
+        <p style="margin-top:16px; color:var(--ink-soft); font-size:15.5px; line-height:1.7;">Regio Utrecht draait op wederzijds respect: voor medespelers, voor het staffteam en voor het verhaal dat je samen opbouwt. Overtredingen worden per geval beoordeeld door een onafhankelijk staffteam.</p>
+        <a href="#" class="btn btn-primary" style="margin-top:24px; background:var(--ink); border-color:var(--ink);">Lees het volledige reglement</a>
+      </div>
+      <div class="reveal" style="border-top:2px solid var(--ink); padding-top:20px;">
+        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:18px;">
+          <li style="display:flex; gap:14px;"><span class="mono" style="color:var(--red); font-weight:600;">01</span><span>Minimumleeftijd van 16 jaar, met leeftijdscontrole bij aanmelding.</span></li>
+          <li style="display:flex; gap:14px;"><span class="mono" style="color:var(--red); font-weight:600;">02</span><span>Blijf te allen tijde in character tijdens actieve sessies.</span></li>
+          <li style="display:flex; gap:14px;"><span class="mono" style="color:var(--red); font-weight:600;">03</span><span>Geen fail-RP: handel zoals je personage logischerwijs zou handelen.</span></li>
+          <li style="display:flex; gap:14px;"><span class="mono" style="color:var(--red); font-weight:600;">04</span><span>Diensten volgen hun eigen interne reglement bovenop de serverregels.</span></li>
+          <li style="display:flex; gap:14px;"><span class="mono" style="color:var(--red); font-weight:600;">05</span><span>Meld incidenten met medespelers altijd via een staffticket, nooit publiekelijk.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="cta-banner">
+    <div class="wrap">
+      <h2>De meldkamer wacht op versterking</h2>
+      <p>Sluit je aan bij een community die roleplay net zo serieus neemt als jij. Geen ervaring vereist — wel motivatie.</p>
+      <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+        <a href="#" class="btn btn-white">Word lid op Discord</a>
+        <a href="#diensten" class="btn btn-ghost">Bekijk de diensten</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="brand" style="margin-bottom:14px;">
+          <span class="brand__badge" aria-hidden="true"></span>
+          <span>REGIO UTRECHT</span>
+        </div>
+        <p>Een Nederlandse GTA V roleplaycommunity die de hulpdiensten van de provincie Utrecht naspeelt. Fanproject, gebouwd door en voor de community.</p>
+      </div>
+      <div>
+        <h4 class="mono">Community</h4>
+        <ul>
+          <li><a href="#diensten">Diensten</a></li>
+          <li><a href="#waarom">Waarom wij</a></li>
+          <li><a href="#regels">Reglement</a></li>
+          <li><a href="#aanmelden">Aanmelden</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="mono">Diensten</h4>
+        <ul>
+          <li><a href="#diensten">Politie</a></li>
+          <li><a href="#diensten">Ambulance</a></li>
+          <li><a href="#diensten">Brandweer</a></li>
+          <li><a href="#diensten">Burgers</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="mono">Volg ons</h4>
+        <ul>
+          <li><a href="#">Discord</a></li>
+          <li><a href="#">TikTok</a></li>
+          <li><a href="#">YouTube</a></li>
+          <li><a href="#">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p>© 2026 Regio Utrecht RP. Niet verbonden aan Rockstar Games of Take-Two Interactive.</p>
+      <p class="mono">MELDKAMER STATUS: ONLINE</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile nav toggle
+  const toggle = document.querySelector('.navtoggle');
+  const navlinks = document.querySelector('.navlinks');
+  if(toggle){
+    toggle.addEventListener('click', () => {
+      const open = navlinks.style.display === 'flex';
+      navlinks.style.display = open ? 'none' : 'flex';
+      navlinks.style.flexDirection = 'column';
+      navlinks.style.position = 'absolute';
+      navlinks.style.top = '100%';
+      navlinks.style.left = '0';
+      navlinks.style.right = '0';
+      navlinks.style.background = 'rgba(10,15,26,0.98)';
+      navlinks.style.padding = '20px 28px';
+      navlinks.style.gap = '18px';
+      navlinks.style.borderBottom = '1px solid rgba(232,235,244,0.1)';
+    });
+  }
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
