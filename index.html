@@ -2,848 +2,756 @@
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Regio Utrecht — Nederlandse GTA V Hulpdiensten Roleplay</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Meldkamer Systeem 2025</title>
 <style>
   :root{
-    --navy-0:#0a0f1a;
-    --navy-1:#0f1729;
-    --navy-2:#152036;
-    --line-dark: rgba(232,235,244,0.10);
-    --line-dark-strong: rgba(232,235,244,0.18);
-    --paper:#f2ede1;
-    --paper-2:#e9e2d2;
-    --ink:#171512;
-    --ink-soft:#4a463e;
-    --red:#c81e3a;
-    --red-dim:#8f1529;
-    --amber:#f0a63a;
-    --green:#3fae6a;
-    --text-dim: rgba(232,235,244,0.62);
-    --text-dimmer: rgba(232,235,244,0.40);
+    --bg-0:#11142b; --bg-1:#1a1f3d; --bg-2:#232a52; --bg-3:#2c3462; --line:#343d6e;
+    --text:#eef0fb; --muted:#9aa3c7; --blue:#3d7bff; --blue-d:#2e5fd6; --red:#e14b3f; --red-d:#c93a2f;
+    --green:#33c481; --amber:#e8b64a; --radius:14px; --shadow:0 8px 24px rgba(0,0,0,.35);
   }
-
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    margin:0;
-    background:var(--navy-0);
-    color:#eceef2;
-    font-family:'Inter',sans-serif;
-    -webkit-font-smoothing:antialiased;
-  }
-  @media (prefers-reduced-motion: reduce){
-    html{scroll-behavior:auto;}
-    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
-  }
+  html,body{height:100%;}
+  body{margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Arial,sans-serif;
+    background:radial-gradient(1200px 800px at 20% -10%, #1c2350 0%, var(--bg-0) 55%); color:var(--text); min-height:100vh;}
+  #app{min-height:100vh; display:flex; flex-direction:column;}
 
-  h1,h2,h3,h4{
-    font-family:'Oswald',sans-serif;
-    text-transform:uppercase;
-    letter-spacing:0.01em;
-    margin:0;
-    font-weight:600;
-  }
-  .mono{ font-family:'JetBrains Mono',monospace; }
-  a{ color:inherit; }
-  img{max-width:100%;display:block;}
+  .login-wrap{flex:1; display:flex; align-items:center; justify-content:center; padding:24px;}
+  .login-card{background:linear-gradient(180deg, var(--bg-1), var(--bg-0)); border:1px solid var(--line);
+    border-radius:20px; padding:40px; width:100%; max-width:560px; box-shadow:var(--shadow);}
+  .login-title{font-size:22px; font-weight:700; margin:0 0 4px;}
+  .login-sub{color:var(--muted); margin:0 0 28px; font-size:14px;}
+  .role-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+  @media (max-width:560px){ .role-grid{grid-template-columns:1fr;} }
+  .role-btn{background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius); padding:22px 10px;
+    color:var(--text); cursor:pointer; text-align:center; font-size:14px; font-weight:600; transition:.15s;}
+  .role-btn:hover{background:var(--bg-3); border-color:var(--blue); transform:translateY(-2px);}
+  .role-emoji{font-size:28px; display:block; margin-bottom:8px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:.04em;}
+  .field input, .field select, .field textarea{width:100%; background:var(--bg-0); border:1px solid var(--line); color:var(--text);
+    padding:10px 12px; border-radius:10px; font-size:14px; font-family:inherit;}
+  .field input:focus, .field select:focus, .field textarea:focus{outline:none; border-color:var(--blue);}
+  .dienst-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:20px;}
+  .dienst-opt{background:var(--bg-2); border:2px solid var(--line); border-radius:12px; padding:14px 6px; text-align:center; cursor:pointer; font-size:12px; font-weight:600;}
+  .dienst-opt .em{font-size:22px; display:block; margin-bottom:6px;}
+  .dienst-opt.sel{border-color:var(--blue); background:var(--bg-3);}
+  .btn{background:var(--blue); border:none; color:#fff; padding:12px 18px; border-radius:10px; font-weight:700; font-size:14px; cursor:pointer; transition:.15s;}
+  .btn:hover{background:var(--blue-d);}
+  .btn.wide{width:100%;}
+  .btn.ghost{background:transparent; border:1px solid var(--line); color:var(--text);}
+  .btn.ghost:hover{border-color:var(--blue);}
+  .btn.discord{background:#5865F2;}
+  .btn.discord:hover{background:#4a55d6;}
+  .back-link{color:var(--muted); font-size:13px; cursor:pointer; margin-bottom:16px; display:inline-block;}
+  .back-link:hover{color:var(--text);}
 
-  .wrap{ max-width:1180px; margin:0 auto; padding:0 28px; }
+  .topbar{display:flex; align-items:center; justify-content:space-between; padding:14px 22px; background:var(--bg-1); border-bottom:1px solid var(--line); flex-wrap:wrap; gap:10px;}
+  .topbar-left{display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
+  .brand{font-weight:800; font-size:15px;}
+  .brand .sub{color:var(--muted); font-weight:400; font-size:12px; margin-left:8px;}
+  .pill{background:var(--bg-2); border:1px solid var(--line); border-radius:999px; padding:6px 14px; font-size:13px; font-weight:600;}
+  .topbar-right{display:flex; align-items:center; gap:12px;}
+  .clock{font-size:13px; color:var(--muted); font-variant-numeric:tabular-nums;}
+  .logout{background:var(--bg-2); border:1px solid var(--line); color:var(--text); border-radius:10px; padding:8px 12px; cursor:pointer; font-size:13px;}
+  .logout:hover{border-color:var(--red); color:var(--red);}
 
-  /* ===== Focus visibility ===== */
-  a:focus-visible, button:focus-visible{
-    outline:2px solid var(--amber);
-    outline-offset:3px;
-  }
+  .board{flex:1; display:grid; gap:16px; padding:18px; grid-template-columns:repeat(4,1fr); align-items:start;}
+  @media (max-width:1300px){ .board{grid-template-columns:1fr 1fr;} }
+  @media (max-width:700px){ .board{grid-template-columns:1fr;} }
+  .panel{background:var(--bg-1); border:1px solid var(--line); border-radius:var(--radius); display:flex; flex-direction:column; overflow:hidden; box-shadow:var(--shadow);}
+  .panel-head{display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid var(--line); background:var(--bg-2); font-weight:700; font-size:13px; gap:8px;}
+  .panel-head .icon-btn{background:var(--blue); border:none; color:#fff; width:26px; height:26px; border-radius:8px; cursor:pointer; font-size:16px; line-height:1; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+  .panel-body{padding:12px; flex:1; overflow-y:auto; min-height:100px; max-height:38vh;}
+  .empty-hint{color:var(--muted); font-size:13px; padding:8px 4px;}
 
-  /* ===== Top alert bar ===== */
-  .alertbar{
-    background:var(--red);
-    color:#fff;
-    font-family:'JetBrains Mono',monospace;
-    font-size:12.5px;
-    letter-spacing:0.03em;
-    padding:7px 0;
-    overflow:hidden;
-    white-space:nowrap;
-    border-bottom:1px solid rgba(0,0,0,0.2);
-  }
-  .alertbar__track{
-    display:inline-flex;
-    gap:48px;
-    animation: scrollbar 26s linear infinite;
-    padding-left:100%;
-  }
-  @keyframes scrollbar{
-    from{ transform:translateX(0); }
-    to{ transform:translateX(-100%); }
-  }
+  .melding-card{background:var(--bg-2); border:1px solid var(--line); border-left:4px solid var(--amber); border-radius:10px; padding:10px 12px; margin-bottom:10px; cursor:pointer; transition:.12s;}
+  .melding-card:hover{border-color:var(--blue);}
+  .melding-card.drag-over{border-color:var(--blue); background:var(--bg-3); box-shadow:0 0 0 2px var(--blue) inset;}
+  .melding-card.uitgegeven{border-left-color:var(--green);}
+  .melding-card .m-top{display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:4px;}
+  .melding-card .m-tekst{font-size:13px; line-height:1.4;}
+  .melding-card .m-tags{margin-top:6px; font-size:11px; color:var(--muted);}
 
-  /* ===== Nav ===== */
-  header{
-    position:sticky; top:0; z-index:100;
-    background:rgba(10,15,26,0.86);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--line-dark);
-  }
-  nav{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:16px 28px;
-    max-width:1180px; margin:0 auto;
-  }
-  .brand{
-    display:flex; align-items:center; gap:12px;
-    font-family:'Oswald',sans-serif;
-    font-weight:700;
-    font-size:19px;
-    letter-spacing:0.02em;
-    text-decoration:none;
-  }
-  .brand__badge{
-    width:34px;height:34px;
-    border:2px solid var(--amber);
-    display:flex;align-items:center;justify-content:center;
-    position:relative;
-    flex-shrink:0;
-  }
-  .brand__badge::after{
-    content:"";
-    width:8px;height:8px;
-    background:var(--red);
-  }
-  .brand span.sub{
-    display:block;
-    font-family:'JetBrains Mono',monospace;
-    text-transform:none;
-    font-weight:400;
-    font-size:10px;
-    letter-spacing:0.08em;
-    color:var(--text-dimmer);
-    margin-top:2px;
-  }
-  .navlinks{ display:flex; gap:32px; list-style:none; margin:0; padding:0; }
-  .navlinks a{
-    text-decoration:none;
-    font-size:13.5px;
-    font-weight:600;
-    letter-spacing:0.04em;
-    text-transform:uppercase;
-    color:var(--text-dim);
-    transition:color .15s ease;
-    position:relative;
-  }
-  .navlinks a:hover{ color:#fff; }
-  .nav-cta{
-    display:inline-flex; align-items:center; gap:8px;
-    background:var(--red);
-    color:#fff !important;
-    padding:10px 18px;
-    text-decoration:none;
-    font-weight:700;
-    font-size:13px;
-    letter-spacing:0.03em;
-    text-transform:uppercase;
-    border:1px solid var(--red);
-    transition: background .15s ease, transform .15s ease;
-  }
-  .nav-cta:hover{ background:#a91830; transform:translateY(-1px); }
-  .navtoggle{ display:none; background:none;border:1px solid var(--line-dark-strong); color:#fff; width:40px;height:40px; cursor:pointer; }
+  .unit-row{display:flex; align-items:center; justify-content:space-between; gap:10px; background:var(--bg-2); border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin-bottom:8px; cursor:grab;}
+  .unit-row:hover{border-color:var(--blue);}
+  .unit-row.dragging{opacity:.4;}
+  .unit-row .u-left{display:flex; align-items:center; gap:10px; min-width:0;}
+  .unit-em{font-size:18px; flex-shrink:0;}
+  .u-name{font-weight:700; font-size:13px; display:flex; align-items:center;}
+  .u-sub{font-size:11px; color:var(--muted);}
+  .u-status{font-size:11px; font-weight:700; padding:4px 9px; border-radius:999px; white-space:nowrap;}
+  .u-status.inzetbaar{background:rgba(51,196,129,.15); color:var(--green);}
+  .u-status.aanrijdend{background:rgba(232,182,74,.15); color:var(--amber);}
+  .u-status.terplaatse{background:rgba(61,123,255,.15); color:var(--blue);}
+  .u-status.niet{background:rgba(225,75,63,.15); color:var(--red);}
+  .u-status.retour{background:rgba(154,163,199,.15); color:var(--muted);}
+  .u-status.eigen{background:rgba(61,123,255,.15); color:var(--blue);}
+  .online-dot{width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:7px; flex-shrink:0;}
+  .online-dot.on{background:var(--green); box-shadow:0 0 6px var(--green);}
+  .online-dot.off{background:var(--muted);}
 
-  /* ===== Hero ===== */
-  .hero{
-    position:relative;
-    padding:96px 0 70px;
-    overflow:hidden;
-    border-bottom:1px solid var(--line-dark);
-    background:
-      radial-gradient(ellipse 900px 500px at 80% -10%, rgba(200,30,58,0.14), transparent 60%),
-      var(--navy-0);
-  }
-  .hero-grid{
-    position:absolute; inset:0;
-    background-image:
-      linear-gradient(var(--line-dark) 1px, transparent 1px),
-      linear-gradient(90deg, var(--line-dark) 1px, transparent 1px);
-    background-size:56px 56px;
-    mask-image: radial-gradient(ellipse 800px 500px at 70% 20%, black, transparent 75%);
-    pointer-events:none;
-  }
-  .hero__inner{ position:relative; display:grid; grid-template-columns:1.15fr 0.85fr; gap:56px; align-items:center; }
-  .eyebrow{
-    display:inline-flex; align-items:center; gap:9px;
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px; letter-spacing:0.08em;
-    color:var(--amber);
-    text-transform:uppercase;
-    margin-bottom:22px;
-  }
-  .eyebrow .dot{
-    width:8px;height:8px; border-radius:50%; background:var(--green);
-    box-shadow:0 0 0 0 rgba(63,174,106,0.6);
-    animation:pulse 2s infinite;
-  }
-  @keyframes pulse{
-    0%{ box-shadow:0 0 0 0 rgba(63,174,106,0.55); }
-    70%{ box-shadow:0 0 0 8px rgba(63,174,106,0); }
-    100%{ box-shadow:0 0 0 0 rgba(63,174,106,0); }
-  }
-  .hero h1{
-    font-size:clamp(38px, 5.4vw, 68px);
-    line-height:1.02;
-    color:#fff;
-  }
-  .hero h1 em{
-    font-style:normal;
-    color:var(--red);
-    -webkit-text-stroke:0;
-  }
-  .hero p.lede{
-    font-size:17px;
-    line-height:1.65;
-    color:var(--text-dim);
-    max-width:52ch;
-    margin-top:24px;
-    font-weight:400;
-  }
-  .hero__ctas{ display:flex; gap:14px; margin-top:34px; flex-wrap:wrap; }
-  .btn{
-    display:inline-flex; align-items:center; gap:10px;
-    padding:15px 26px;
-    font-weight:700; font-size:14px;
-    text-transform:uppercase; letter-spacing:0.03em;
-    text-decoration:none;
-    border:1px solid transparent;
-    cursor:pointer;
-    transition:transform .15s ease, background .15s ease, border-color .15s ease;
-  }
-  .btn-primary{ background:var(--red); color:#fff; }
-  .btn-primary:hover{ background:#a91830; transform:translateY(-2px); }
-  .btn-ghost{ border-color:var(--line-dark-strong); color:#fff; background:transparent; }
-  .btn-ghost:hover{ border-color:#fff; transform:translateY(-2px); }
+  .req-item{background:var(--bg-2); border:1px solid var(--amber); border-radius:10px; padding:9px 12px; margin-bottom:8px; font-size:12px;}
+  .req-item.nood{border-color:var(--red);}
+  .req-item b{display:block; margin-bottom:2px;}
+  .req-actions{display:flex; gap:8px; margin-top:8px;}
+  .btn-mini{padding:5px 10px; font-size:11px; border-radius:8px; border:none; cursor:pointer; font-weight:700;}
+  .btn-approve{background:var(--green); color:#06301d;}
+  .btn-reject{background:var(--red); color:#fff;}
+  .status-tag{font-size:11px; font-weight:700; padding:3px 8px; border-radius:999px; display:inline-block; margin-top:6px;}
+  .status-tag.wachtend{background:rgba(232,182,74,.15); color:var(--amber);}
+  .status-tag.goedgekeurd{background:rgba(51,196,129,.15); color:var(--green);}
+  .status-tag.afgewezen{background:rgba(225,75,63,.15); color:var(--red);}
 
-  .hero__meta{ display:flex; gap:28px; margin-top:44px; flex-wrap:wrap; }
-  .hero__meta div{ font-family:'JetBrains Mono',monospace; }
-  .hero__meta .num{ font-size:22px; color:#fff; font-weight:600; }
-  .hero__meta .lbl{ font-size:11px; color:var(--text-dimmer); text-transform:uppercase; letter-spacing:0.06em; margin-top:2px;}
+  .grid3{display:grid; grid-template-columns:1fr 1fr 1.3fr; gap:16px; padding:18px; flex:1;}
+  @media (max-width:980px){ .grid3{grid-template-columns:1fr;} }
+  .melding-view{padding:14px; font-size:14px; line-height:1.7; white-space:pre-wrap;}
+  textarea.kladblok{width:100%; height:100%; min-height:180px; background:transparent; border:none; color:var(--text); resize:none; font-family:inherit; font-size:14px; padding:14px;}
+  textarea.kladblok:focus{outline:none;}
+  .status-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; padding:14px;}
+  .status-btn{background:var(--bg-2); border:1px solid var(--line); border-radius:12px; color:var(--text); padding:20px 8px; font-weight:700; font-size:13px; cursor:pointer; min-height:74px; display:flex; align-items:center; justify-content:center; text-align:center; transition:.12s;}
+  .status-btn:hover{border-color:var(--blue); transform:translateY(-1px);}
+  .status-btn:active{transform:scale(.96);}
+  .status-btn.active{background:var(--blue); border-color:var(--blue); box-shadow:0 0 0 2px rgba(61,123,255,.4) inset;}
+  .status-btn.nood{background:var(--red); border-color:var(--red-d);}
+  .status-btn.nood:hover{background:var(--red-d);}
+  .toast{position:fixed; top:18px; right:18px; background:var(--green); color:#06301d; font-weight:700; padding:10px 18px; border-radius:10px; box-shadow:var(--shadow); z-index:50; font-size:13px; animation:fade 2.6s forwards;}
+  @keyframes fade{0%{opacity:0; transform:translateY(-8px);} 10%{opacity:1; transform:translateY(0);} 85%{opacity:1;} 100%{opacity:0;}}
 
-  /* ==== dispatch panel (hero visual) ==== */
-  .panel{
-    background:var(--navy-1);
-    border:1px solid var(--line-dark-strong);
-    position:relative;
-  }
-  .panel__head{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:12px 16px;
-    border-bottom:1px solid var(--line-dark);
-    font-family:'JetBrains Mono',monospace;
-    font-size:11.5px;
-    color:var(--text-dimmer);
-    letter-spacing:0.05em;
-  }
-  .panel__head .live{ color:var(--green); display:flex; align-items:center; gap:6px; }
-  .panel__head .live .dot{ width:6px;height:6px;background:var(--green);border-radius:50%; animation:pulse 2s infinite;}
-  .panel__body{ padding:6px 0; height:340px; overflow:hidden; position:relative; }
-  .panel__body::after{
-    content:""; position:absolute; inset:0;
-    background:linear-gradient(to bottom, transparent 78%, var(--navy-1) 100%);
-    pointer-events:none;
-  }
-  .cad-feed{ display:flex; flex-direction:column; }
-  .cad-line{
-    display:grid; grid-template-columns:64px 92px 1fr auto;
-    gap:10px;
-    padding:9px 16px;
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    border-bottom:1px dashed var(--line-dark);
-    align-items:center;
-  }
-  .cad-line .t{ color:var(--text-dimmer); }
-  .cad-line .code{ color:var(--amber); font-weight:600; }
-  .cad-line .desc{ color:#dfe3ec; }
-  .cad-line .status{ font-size:10px; padding:2px 7px; text-transform:uppercase; letter-spacing:0.04em; justify-self:end;}
-  .status.open{ background:rgba(200,30,58,0.18); color:#ff7288; border:1px solid rgba(200,30,58,0.4);}
-  .status.busy{ background:rgba(240,166,58,0.16); color:var(--amber); border:1px solid rgba(240,166,58,0.35);}
-  .status.done{ background:rgba(63,174,106,0.16); color:#6bd393; border:1px solid rgba(63,174,106,0.35);}
+  .modal-bg{position:fixed; inset:0; background:rgba(10,12,26,.6); display:flex; align-items:center; justify-content:center; z-index:40; padding:20px;}
+  .modal{background:var(--bg-1); border:1px solid var(--line); border-radius:16px; padding:24px; width:100%; max-width:460px; box-shadow:var(--shadow);}
+  .modal h3{margin:0 0 16px;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
 
-  /* ===== Section shells ===== */
-  section{ padding:100px 0; }
-  .section-dark{ background:var(--navy-0); border-bottom:1px solid var(--line-dark); }
-  .section-paper{ background:var(--paper); color:var(--ink); border-bottom:1px solid rgba(0,0,0,0.08); }
-  .kicker{
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px; letter-spacing:0.1em; text-transform:uppercase;
-    color:var(--red);
-    display:flex; align-items:center; gap:10px;
-    margin-bottom:14px;
-  }
-  .kicker::before{ content:""; width:26px; height:2px; background:var(--red); display:inline-block; }
-  .section-dark .kicker{ color:var(--amber); }
-  .section-dark .kicker::before{ background:var(--amber); }
-  .sect-head{ max-width:640px; margin-bottom:56px; }
-  .sect-head h2{ font-size:clamp(28px,3.4vw,42px); line-height:1.08; }
-  .section-dark .sect-head h2{ color:#fff; }
-  .sect-head p{ margin-top:16px; font-size:16px; line-height:1.65; color:var(--ink-soft); }
-  .section-dark .sect-head p{ color:var(--text-dim); }
-
-  /* reveal on scroll */
-  .reveal{ opacity:0; transform:translateY(22px); transition:opacity .6s ease, transform .6s ease; }
-  .reveal.in{ opacity:1; transform:translateY(0); }
-
-  /* ===== Diensten (departments) ===== */
-  .diensten-grid{
-    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
-    background:var(--line-dark-strong);
-    border:1px solid var(--line-dark-strong);
-  }
-  .dienst{
-    background:var(--navy-1);
-    padding:32px 26px;
-    display:flex; flex-direction:column; gap:14px;
-    transition:background .2s ease;
-  }
-  .dienst:hover{ background:var(--navy-2); }
-  .dienst__icon{
-    width:44px;height:44px;
-    border:1.5px solid var(--line-dark-strong);
-    display:flex;align-items:center;justify-content:center;
-    color:var(--amber);
-  }
-  .dienst h3{ font-size:18px; color:#fff; }
-  .dienst .code{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dimmer); letter-spacing:0.06em; }
-  .dienst p{ font-size:14px; line-height:1.6; color:var(--text-dim); flex-grow:1; }
-  .dienst a{
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px; text-decoration:none; color:var(--amber);
-    letter-spacing:0.03em;
-    display:inline-flex; align-items:center; gap:6px;
-  }
-  .dienst a:hover{ color:#fff; }
-
-  /* ===== Waarom (features) on paper ===== */
-  .feat-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:36px; }
-  .feat{ border-top:2px solid var(--ink); padding-top:18px; }
-  .feat .fn{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--red); margin-bottom:10px; display:block;}
-  .feat h3{ font-size:19px; color:var(--ink); margin-bottom:10px; text-transform:none; letter-spacing:0; font-weight:700;}
-  .feat p{ font-size:14.5px; line-height:1.65; color:var(--ink-soft); margin:0; }
-
-  /* ===== Live meldkamer signature section ===== */
-  .meldkamer{
-    background:var(--navy-1);
-    position:relative;
-  }
-  .mk-terminal{
-    border:1px solid var(--line-dark-strong);
-    background:#080c14;
-    box-shadow:0 30px 80px -30px rgba(0,0,0,0.6);
-  }
-  .mk-bar{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:13px 18px;
-    border-bottom:1px solid var(--line-dark);
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    color:var(--text-dimmer);
-  }
-  .mk-bar .dots{ display:flex; gap:6px; }
-  .mk-bar .dots span{ width:9px;height:9px;border-radius:50%; display:inline-block; }
-  .mk-bar .dots span:nth-child(1){ background:#c81e3a; }
-  .mk-bar .dots span:nth-child(2){ background:#f0a63a; }
-  .mk-bar .dots span:nth-child(3){ background:#3fae6a; }
-  .mk-ticker{ height:420px; overflow:hidden; position:relative; }
-  .mk-ticker::before{
-    content:""; position:absolute; top:0; left:0; right:0; height:24px;
-    background:linear-gradient(#080c14, transparent); z-index:2;
-  }
-  .mk-ticker::after{
-    content:""; position:absolute; bottom:0; left:0; right:0; height:40px;
-    background:linear-gradient(transparent, #080c14); z-index:2;
-  }
-  .mk-scroll{ animation:mkscroll 22s linear infinite; }
-  .mk-ticker:hover .mk-scroll{ animation-play-state:paused; }
-  @keyframes mkscroll{
-    0%{ transform:translateY(0); }
-    100%{ transform:translateY(-50%); }
-  }
-  .mk-row{
-    padding:14px 22px;
-    display:grid; grid-template-columns:150px 90px 1fr;
-    gap:16px;
-    font-family:'JetBrains Mono',monospace;
-    font-size:13px;
-    border-bottom:1px solid var(--line-dark);
-    align-items:baseline;
-  }
-  .mk-row .ts{ color:var(--text-dimmer); }
-  .mk-row .unit{ color:var(--amber); }
-  .mk-row .msg{ color:#e5e8f0; }
-  .mk-row .loc{ color:var(--text-dimmer); }
-
-  .meldkamer__side h2{ color:#fff; }
-  .meldkamer .grid2{ display:grid; grid-template-columns:0.9fr 1.1fr; gap:60px; align-items:center; }
-  .mk-stats{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:34px; }
-  .mk-stat{ border:1px solid var(--line-dark-strong); padding:16px 18px; }
-  .mk-stat .n{ font-family:'JetBrains Mono',monospace; font-size:24px; color:var(--amber); font-weight:600; }
-  .mk-stat .l{ font-size:11.5px; color:var(--text-dimmer); text-transform:uppercase; letter-spacing:0.05em; margin-top:4px;}
-
-  /* ===== Stappen (join steps) ===== */
-  .steps{ counter-reset: stepnum; display:grid; grid-template-columns:repeat(4,1fr); gap:0; border-top:1px solid rgba(0,0,0,0.12); }
-  .step{
-    counter-increment: stepnum;
-    padding:30px 24px 30px 0;
-    border-right:1px solid rgba(0,0,0,0.12);
-    position:relative;
-  }
-  .step:last-child{ border-right:none; }
-  .step::before{
-    content: counter(stepnum, decimal-leading-zero);
-    font-family:'JetBrains Mono',monospace;
-    font-size:13px;
-    color:var(--red);
-    display:block;
-    margin-bottom:14px;
-  }
-  .step h3{ font-size:16.5px; color:var(--ink); text-transform:none; letter-spacing:0; margin-bottom:8px; font-weight:700;}
-  .step p{ font-size:14px; color:var(--ink-soft); line-height:1.6; margin:0;}
-
-  /* ===== Testimonials ===== */
-  .quotes{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line-dark-strong); border:1px solid var(--line-dark-strong); }
-  .quote{ background:var(--navy-1); padding:30px 28px; }
-  .quote p{ font-size:15px; line-height:1.7; color:#dfe3ec; margin:0 0 20px; }
-  .quote .who{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--amber); }
-  .quote .role{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dimmer); margin-top:2px; }
-
-  /* ===== CTA banner ===== */
-  .cta-banner{
-    background:linear-gradient(120deg, var(--red-dim), var(--red));
-    padding:70px 0;
-    text-align:center;
-  }
-  .cta-banner h2{ color:#fff; font-size:clamp(26px,4vw,42px); }
-  .cta-banner p{ color:rgba(255,255,255,0.85); max-width:56ch; margin:16px auto 30px; font-size:15.5px; line-height:1.6; }
-  .cta-banner .btn-ghost{ border-color:rgba(255,255,255,0.5); }
-  .cta-banner .btn-ghost:hover{ border-color:#fff; }
-  .cta-banner .btn-white{ background:#fff; color:var(--red); }
-  .cta-banner .btn-white:hover{ background:#f2e9e9; transform:translateY(-2px); }
-
-  /* ===== Footer ===== */
-  footer{ background:var(--navy-0); padding:60px 0 30px; }
-  .foot-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px; padding-bottom:44px; border-bottom:1px solid var(--line-dark); }
-  .foot-grid h4{ color:#fff; font-size:13px; letter-spacing:0.06em; margin-bottom:16px; }
-  .foot-grid ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
-  .foot-grid a{ text-decoration:none; color:var(--text-dim); font-size:13.5px; }
-  .foot-grid a:hover{ color:#fff; }
-  .foot-grid p{ color:var(--text-dim); font-size:13.5px; line-height:1.65; max-width:34ch; }
-  .foot-bottom{ display:flex; justify-content:space-between; align-items:center; padding-top:26px; flex-wrap:wrap; gap:12px;}
-  .foot-bottom p{ font-size:12px; color:var(--text-dimmer); margin:0; }
-
-  /* ===== Responsive ===== */
-  @media (max-width: 980px){
-    .hero__inner{ grid-template-columns:1fr; }
-    .diensten-grid{ grid-template-columns:repeat(2,1fr); }
-    .feat-grid{ grid-template-columns:1fr 1fr; }
-    .meldkamer .grid2{ grid-template-columns:1fr; }
-    .quotes{ grid-template-columns:1fr; }
-    .steps{ grid-template-columns:1fr 1fr; }
-    .step{ border-bottom:1px solid rgba(0,0,0,0.12); }
-    .foot-grid{ grid-template-columns:1fr 1fr; }
-  }
-  @media (max-width: 700px){
-    .navlinks{ display:none; }
-    .navtoggle{ display:block; }
-    .diensten-grid{ grid-template-columns:1fr; }
-    .feat-grid{ grid-template-columns:1fr; }
-    .steps{ grid-template-columns:1fr; }
-    .foot-grid{ grid-template-columns:1fr; }
-    .hero__meta{ gap:20px; }
-    section{ padding:70px 0; }
-  }
+  .intake-wait{text-align:center; padding:20px 0;}
+  .spinner{width:34px; height:34px; border-radius:50%; border:3px solid var(--line); border-top-color:var(--blue); animation:spin 1s linear infinite; margin:0 auto 16px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .mini-verzoek{background:var(--bg-2); border:1px solid var(--line); border-radius:8px; padding:8px 10px; margin-bottom:6px; font-size:12px; display:flex; justify-content:space-between; align-items:center;}
 </style>
 </head>
 <body>
-
-<div class="alertbar mono">
-  <div class="alertbar__track" aria-hidden="true">
-    <span>112-STATUS: MELDKAMER UTRECHT OPERATIONEEL</span>
-    <span>WHITELIST: OPEN VOOR NIEUWE AANMELDINGEN</span>
-    <span>DISCORD: 3.400+ LEDEN ONLINE</span>
-    <span>SESSIES: DAGELIJKS VANAF 19:00</span>
-    <span>112-STATUS: MELDKAMER UTRECHT OPERATIONEEL</span>
-    <span>WHITELIST: OPEN VOOR NIEUWE AANMELDINGEN</span>
-    <span>DISCORD: 3.400+ LEDEN ONLINE</span>
-    <span>SESSIES: DAGELIJKS VANAF 19:00</span>
-  </div>
-</div>
-
-<header>
-  <nav>
-    <a href="#top" class="brand">
-      <span class="brand__badge" aria-hidden="true"></span>
-      <span>REGIO UTRECHT<span class="sub">GTA V HULPDIENSTEN ROLEPLAY</span></span>
-    </a>
-    <ul class="navlinks">
-      <li><a href="#diensten">Diensten</a></li>
-      <li><a href="#waarom">Waarom wij</a></li>
-      <li><a href="#meldkamer">Meldkamer</a></li>
-      <li><a href="#aanmelden">Aanmelden</a></li>
-      <li><a href="#regels">Regels</a></li>
-    </ul>
-    <a href="#aanmelden" class="nav-cta">Join Discord</a>
-    <button class="navtoggle" aria-label="Menu openen">☰</button>
-  </nav>
-</header>
-
-<main id="top">
-
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-grid" aria-hidden="true"></div>
-    <div class="wrap hero__inner">
-      <div>
-        <div class="eyebrow"><span class="dot"></span> LIVE — SESSIE ACTIEF</div>
-        <h1>Utrecht rekent<br>op <em>jou.</em></h1>
-        <p class="lede">Regio Utrecht is een Nederlandse GTA V roleplaycommunity die de hulpdiensten van de provincie Utrecht op serieuze wijze naspeelt. Politie, ambulance, brandweer en burgers — één stad, één regio, ontelbaar veel verhalen.</p>
-        <div class="hero__ctas">
-          <a href="#aanmelden" class="btn btn-primary">Word lid op Discord</a>
-          <a href="#diensten" class="btn btn-ghost">Bekijk de diensten</a>
-        </div>
-        <div class="hero__meta">
-          <div><div class="num">2021</div><div class="lbl">Opgericht</div></div>
-          <div><div class="num">3.400+</div><div class="lbl">Community leden</div></div>
-          <div><div class="num">4</div><div class="lbl">Actieve diensten</div></div>
-          <div><div class="num">7/7</div><div class="lbl">Dagen per week live</div></div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="panel__head">
-          <span>MELDKAMER — REGIO UTRECHT</span>
-          <span class="live"><span class="dot"></span> LIVE FEED</span>
-        </div>
-        <div class="panel__body">
-          <div class="cad-feed">
-            <div class="cad-line"><span class="t">19:42</span><span class="code">10-54</span><span class="desc">Aanrijding twee voertuigen, A2 bij Nieuwegein</span><span class="status open">Openstaand</span></div>
-            <div class="cad-line"><span class="t">19:39</span><span class="code">B-112</span><span class="desc">Brand in keuken, Wijk bij Duurstede</span><span class="status busy">Onderweg</span></div>
-            <div class="cad-line"><span class="t">19:35</span><span class="code">A-023</span><span class="desc">Reanimatie gemeld, Kanaleneiland</span><span class="status busy">Ter plaatse</span></div>
-            <div class="cad-line"><span class="t">19:28</span><span class="code">10-31</span><span class="desc">Inbraak in woning, Overvecht</span><span class="status done">Afgehandeld</span></div>
-            <div class="cad-line"><span class="t">19:21</span><span class="code">10-80</span><span class="desc">Achtervolging richting Bunnik</span><span class="status open">Openstaand</span></div>
-            <div class="cad-line"><span class="t">19:14</span><span class="code">A-011</span><span class="desc">Val van hoogte, bouwplaats Leidsche Rijn</span><span class="status done">Afgehandeld</span></div>
-            <div class="cad-line"><span class="t">19:08</span><span class="code">B-034</span><span class="desc">Stankoverlast na gasmelding, binnenstad</span><span class="status done">Afgehandeld</span></div>
-            <div class="cad-line"><span class="t">19:02</span><span class="code">10-16</span><span class="desc">Huiselijke twist, Zuilen</span><span class="status busy">Ter plaatse</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- DIENSTEN -->
-  <section class="section-dark" id="diensten">
-    <div class="wrap">
-      <div class="sect-head reveal">
-        <div class="kicker">Onze diensten</div>
-        <h2>Kies je rol in de regio</h2>
-        <p>Elke dienst heeft een eigen structuur, opleidingstraject en procedures — gebaseerd op hoe het er in het echt aan toegaat. Begin onderaan en werk je omhoog, of kies voor het bestaan van een gewone Utrechtse burger.</p>
-      </div>
-      <div class="diensten-grid">
-        <div class="dienst reveal">
-          <div class="dienst__icon">👮</div>
-          <span class="code">EENHEID-UTRECHT</span>
-          <h3>Politie</h3>
-          <p>Van basisteam tot motorbrigade. Handhaving, opsporing en verkeerstoezicht in de hele regio, met echte briefings en portofonieprocedures.</p>
-          <a href="#aanmelden">Solliciteer &rarr;</a>
-        </div>
-        <div class="dienst reveal">
-          <div class="dienst__icon">🚑</div>
-          <span class="code">RAV-UTRECHT</span>
-          <h3>Ambulancezorg</h3>
-          <p>Triage, spoedritten en samenwerking met de meldkamer. Leer protocollen die aansluiten op hoe Nederlandse ambulancediensten echt werken.</p>
-          <a href="#aanmelden">Solliciteer &rarr;</a>
-        </div>
-        <div class="dienst reveal">
-          <div class="dienst__icon">🚒</div>
-          <span class="code">BRANDWEER-UTRECHT</span>
-          <h3>Brandweer</h3>
-          <p>Van eerste uitruk tot grootschalig incident. Blussen, redden en adviseren — inclusief kazerneleven tussen de meldingen door.</p>
-          <a href="#aanmelden">Solliciteer &rarr;</a>
-        </div>
-        <div class="dienst reveal">
-          <div class="dienst__icon">🏙️</div>
-          <span class="code">BURGER-UTRECHT</span>
-          <h3>Burgers &amp; bedrijven</h3>
-          <p>Start een onderneming, werk een eerlijke baan of bouw je eigen verhaal op straat. Geen dienst verplicht — de stad heeft iedereen nodig.</p>
-          <a href="#aanmelden">Solliciteer &rarr;</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- WAAROM -->
-  <section class="section-paper" id="waarom">
-    <div class="wrap">
-      <div class="sect-head reveal">
-        <div class="kicker">Waarom Regio Utrecht</div>
-        <h2>Realisme is geen extra, het is het fundament</h2>
-        <p>Wij bouwen niet aan een server, we bouwen aan een provincie. Elke keuze — van opleiding tot regelgeving — staat in dienst van een geloofwaardige ervaring.</p>
-      </div>
-      <div class="feat-grid">
-        <div class="feat reveal">
-          <span class="fn">01 — OPLEIDING</span>
-          <h3>Echte procedures, geen giswerk</h3>
-          <p>Nieuwe leden doorlopen een opleiding die is gebaseerd op bestaande Nederlandse protocollen, begeleid door mensen met kennis van het vak.</p>
-        </div>
-        <div class="feat reveal">
-          <span class="fn">02 — TOEGANG</span>
-          <h3>Geen pay-to-play</h3>
-          <p>Plek in een dienst verdien je met inzet en kennis, niet met een betaling. Donaties ondersteunen alleen de serverkosten.</p>
-        </div>
-        <div class="feat reveal">
-          <span class="fn">03 — STAFF</span>
-          <h3>Actief en aanspreekbaar</h3>
-          <p>Ons staffteam bemant de meldkamer, bewaakt de regels en is dagelijks bereikbaar op Discord voor vragen, meldingen en klachten.</p>
-        </div>
-        <div class="feat reveal">
-          <span class="fn">04 — WERELD</span>
-          <h3>Eén samenhangende regio</h3>
-          <p>Utrecht, Nieuwegein, Zeist en omstreken zijn met elkaar verbonden. Wat er in de ene wijk gebeurt, heeft gevolgen elders in de provincie.</p>
-        </div>
-        <div class="feat reveal">
-          <span class="fn">05 — SCRIPTS</span>
-          <h3>Op maat gebouwde systemen</h3>
-          <p>Van een eigen CAD-systeem tot realistische voertuigschade — onze ontwikkelaars bouwen tools die roleplay ondersteunen, niet vervangen.</p>
-        </div>
-        <div class="feat reveal">
-          <span class="fn">06 — GEMEENSCHAP</span>
-          <h3>Gezelligheid staat voorop</h3>
-          <p>Naast serieuze roleplay is er ruimte voor evenementen, borrels-in-character en gewoon een goed gesprek op de bank van het bureau.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- MELDKAMER SIGNATURE -->
-  <section class="meldkamer" id="meldkamer">
-    <div class="wrap">
-      <div class="grid2">
-        <div class="reveal meldkamer__side">
-          <div class="kicker">Live uit de meldkamer</div>
-          <h2>Dit is Utrecht, terwijl jij dit leest</h2>
-          <p style="color:var(--text-dim); margin-top:16px; font-size:15.5px; line-height:1.7;">
-            De meldkamer draait zodra de sessie live is. Meldingen worden verdeeld over politie, ambulance en brandweer, en elke eenheid reageert op basis van prioriteit en beschikbaarheid — net als in het echt.
-          </p>
-          <div class="mk-stats">
-            <div class="mk-stat"><div class="n">180+</div><div class="l">Meldingen per sessie</div></div>
-            <div class="mk-stat"><div class="n">&lt;90s</div><div class="l">Gem. uitruktijd</div></div>
-            <div class="mk-stat"><div class="n">3</div><div class="l">Diensten gekoppeld</div></div>
-            <div class="mk-stat"><div class="n">24</div><div class="l">Dispatchers actief</div></div>
-          </div>
-        </div>
-
-        <div class="reveal mk-terminal">
-          <div class="mk-bar">
-            <span>cad@meldkamer-utrecht:~$ tail -f meldingen.log</span>
-            <div class="dots"><span></span><span></span><span></span></div>
-          </div>
-          <div class="mk-ticker">
-            <div class="mk-scroll">
-              <div class="mk-row"><span class="ts">20:11:04</span><span class="unit">P-204</span><span class="msg">Snelheidscontrole opgezet <span class="loc">— N417, Bunnik</span></span></div>
-              <div class="mk-row"><span class="ts">20:09:41</span><span class="unit">A-011</span><span class="msg">Patiënt overgedragen aan spoedeisende hulp <span class="loc">— UMC Utrecht</span></span></div>
-              <div class="mk-row"><span class="ts">20:07:58</span><span class="unit">B-102</span><span class="msg">Brand onder controle, nablussen gestart <span class="loc">— Wijk bij Duurstede</span></span></div>
-              <div class="mk-row"><span class="ts">20:05:22</span><span class="unit">P-118</span><span class="msg">Verdachte aangehouden na korte achtervolging <span class="loc">— Bunnik</span></span></div>
-              <div class="mk-row"><span class="ts">20:02:37</span><span class="unit">A-006</span><span class="msg">Melding reanimatie, spoedrit gestart <span class="loc">— Kanaleneiland</span></span></div>
-              <div class="mk-row"><span class="ts">19:58:15</span><span class="unit">DISP</span><span class="msg">Alle eenheden: verhoogde drukte binnenstad door evenement</span></div>
-              <div class="mk-row"><span class="ts">19:55:03</span><span class="unit">P-092</span><span class="msg">Ter plaatse bij inbraakmelding <span class="loc">— Overvecht</span></span></div>
-              <div class="mk-row"><span class="ts">19:51:47</span><span class="unit">B-034</span><span class="msg">Gasmelding afgehandeld, pand vrijgegeven <span class="loc">— Binnenstad</span></span></div>
-              <div class="mk-row"><span class="ts">19:48:12</span><span class="unit">A-023</span><span class="msg">Onderweg naar val van hoogte <span class="loc">— Leidsche Rijn</span></span></div>
-              <div class="mk-row"><span class="ts">19:44:36</span><span class="unit">P-204</span><span class="msg">Achtervolging beëindigd, richting Bunnik</span></div>
-              <!-- duplicate set for seamless loop -->
-              <div class="mk-row" aria-hidden="true"><span class="ts">20:11:04</span><span class="unit">P-204</span><span class="msg">Snelheidscontrole opgezet <span class="loc">— N417, Bunnik</span></span></div>
-              <div class="mk-row" aria-hidden="true"><span class="ts">20:09:41</span><span class="unit">A-011</span><span class="msg">Patiënt overgedragen aan spoedeisende hulp <span class="loc">— UMC Utrecht</span></span></div>
-              <div class="mk-row" aria-hidden="true"><span class="ts">20:07:58</span><span class="unit">B-102</span><span class="msg">Brand onder controle, nablussen gestart <span class="loc">— Wijk bij Duurstede</span></span></div>
-              <div class="mk-row" aria-hidden="true"><span class="ts">20:05:22</span><span class="unit">P-118</span><span class="msg">Verdachte aangehouden na korte achtervolging <span class="loc">— Bunnik</span></span></div>
-              <div class="mk-row" aria-hidden="true"><span class="ts">20:02:37</span><span class="unit">A-006</span><span class="msg">Melding reanimatie, spoedrit gestart <span class="loc">— Kanaleneiland</span></span></div>
-              <div class="mk-row" aria-hidden="true"><span class="ts">19:58:15</span><span class="unit">DISP</span><span class="msg">Alle eenheden: verhoogde drukte binnenstad door evenement</span></div>
-              <div class="mk-row" aria-hidden="true"><span class="ts">19:55:03</span><span class="unit">P-092</span><span class="msg">Ter plaatse bij inbraakmelding <span class="loc">— Overvecht</span></span></div>
-              <div class="mk-row" aria-hidden="true"><span class="ts">19:51:47</span><span class="unit">B-034</span><span class="msg">Gasmelding afgehandeld, pand vrijgegeven <span class="loc">— Binnenstad</span></span></div>
-              <div class="mk-row" aria-hidden="true"><span class="ts">19:48:12</span><span class="unit">A-023</span><span class="msg">Onderweg naar val van hoogte <span class="loc">— Leidsche Rijn</span></span></div>
-              <div class="mk-row" aria-hidden="true"><span class="ts">19:44:36</span><span class="unit">P-204</span><span class="msg">Achtervolging beëindigd, richting Bunnik</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- STAPPEN -->
-  <section class="section-paper" id="aanmelden">
-    <div class="wrap">
-      <div class="sect-head reveal">
-        <div class="kicker">Zo doe je mee</div>
-        <h2>Van burger tot dienstdoend in vier stappen</h2>
-      </div>
-      <div class="steps reveal">
-        <div class="step">
-          <h3>Installeer FiveM</h3>
-          <p>Download de FiveM-client en koppel deze aan je eigen, legale kopie van GTA V.</p>
-        </div>
-        <div class="step">
-          <h3>Join de Discord</h3>
-          <p>Lees het welkomstbericht, doorloop de leeftijdscontrole en krijg toegang tot de rest van de server.</p>
-        </div>
-        <div class="step">
-          <h3>Lees het reglement</h3>
-          <p>Ons reglement bepaalt de toon van de server. Ken je de regels, dan voorkom je verrassingen.</p>
-        </div>
-        <div class="step">
-          <h3>Maak je personage</h3>
-          <p>Stap de stad in als burger, of solliciteer direct bij een van de vier diensten.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- QUOTES -->
-  <section class="section-dark">
-    <div class="wrap">
-      <div class="sect-head reveal">
-        <div class="kicker">Uit de community</div>
-        <h2>Wat leden over de regio zeggen</h2>
-      </div>
-      <div class="quotes">
-        <div class="quote reveal">
-          <p>"Na drie maanden bij de politie-eenheid voelt elke dienst nog steeds anders. Geen enkele avond in Utrecht is hetzelfde."</p>
-          <div class="who">— Senna_V</div>
-          <div class="role">Hoofdagent, Eenheid Utrecht</div>
-        </div>
-        <div class="quote reveal">
-          <p>"De opleiding bij ambulance was pittiger dan ik verwachtte, in positieve zin. Je leert echt iets over triage."</p>
-          <div class="who">— Daan_K</div>
-          <div class="role">Ambulanceverpleegkundige</div>
-        </div>
-        <div class="quote reveal">
-          <p>"Ik speel puur als burger met een eigen bedrijf en voel me nog steeds volledig onderdeel van het verhaal."</p>
-          <div class="who">— Fem_Utr</div>
-          <div class="role">Ondernemer, Binnenstad</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- REGELS teaser -->
-  <section class="section-paper" id="regels">
-    <div class="wrap" style="display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start;">
-      <div class="reveal">
-        <div class="kicker">Reglement</div>
-        <h2>Duidelijke regels, voor iedereen gelijk</h2>
-        <p style="margin-top:16px; color:var(--ink-soft); font-size:15.5px; line-height:1.7;">Regio Utrecht draait op wederzijds respect: voor medespelers, voor het staffteam en voor het verhaal dat je samen opbouwt. Overtredingen worden per geval beoordeeld door een onafhankelijk staffteam.</p>
-        <a href="#" class="btn btn-primary" style="margin-top:24px; background:var(--ink); border-color:var(--ink);">Lees het volledige reglement</a>
-      </div>
-      <div class="reveal" style="border-top:2px solid var(--ink); padding-top:20px;">
-        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:18px;">
-          <li style="display:flex; gap:14px;"><span class="mono" style="color:var(--red); font-weight:600;">01</span><span>Minimumleeftijd van 16 jaar, met leeftijdscontrole bij aanmelding.</span></li>
-          <li style="display:flex; gap:14px;"><span class="mono" style="color:var(--red); font-weight:600;">02</span><span>Blijf te allen tijde in character tijdens actieve sessies.</span></li>
-          <li style="display:flex; gap:14px;"><span class="mono" style="color:var(--red); font-weight:600;">03</span><span>Geen fail-RP: handel zoals je personage logischerwijs zou handelen.</span></li>
-          <li style="display:flex; gap:14px;"><span class="mono" style="color:var(--red); font-weight:600;">04</span><span>Diensten volgen hun eigen interne reglement bovenop de serverregels.</span></li>
-          <li style="display:flex; gap:14px;"><span class="mono" style="color:var(--red); font-weight:600;">05</span><span>Meld incidenten met medespelers altijd via een staffticket, nooit publiekelijk.</span></li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA BANNER -->
-  <section class="cta-banner">
-    <div class="wrap">
-      <h2>De meldkamer wacht op versterking</h2>
-      <p>Sluit je aan bij een community die roleplay net zo serieus neemt als jij. Geen ervaring vereist — wel motivatie.</p>
-      <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
-        <a href="#" class="btn btn-white">Word lid op Discord</a>
-        <a href="#diensten" class="btn btn-ghost">Bekijk de diensten</a>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<footer>
-  <div class="wrap">
-    <div class="foot-grid">
-      <div>
-        <div class="brand" style="margin-bottom:14px;">
-          <span class="brand__badge" aria-hidden="true"></span>
-          <span>REGIO UTRECHT</span>
-        </div>
-        <p>Een Nederlandse GTA V roleplaycommunity die de hulpdiensten van de provincie Utrecht naspeelt. Fanproject, gebouwd door en voor de community.</p>
-      </div>
-      <div>
-        <h4 class="mono">Community</h4>
-        <ul>
-          <li><a href="#diensten">Diensten</a></li>
-          <li><a href="#waarom">Waarom wij</a></li>
-          <li><a href="#regels">Reglement</a></li>
-          <li><a href="#aanmelden">Aanmelden</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="mono">Diensten</h4>
-        <ul>
-          <li><a href="#diensten">Politie</a></li>
-          <li><a href="#diensten">Ambulance</a></li>
-          <li><a href="#diensten">Brandweer</a></li>
-          <li><a href="#diensten">Burgers</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="mono">Volg ons</h4>
-        <ul>
-          <li><a href="#">Discord</a></li>
-          <li><a href="#">TikTok</a></li>
-          <li><a href="#">YouTube</a></li>
-          <li><a href="#">Instagram</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="foot-bottom">
-      <p>© 2026 Regio Utrecht RP. Niet verbonden aan Rockstar Games of Take-Two Interactive.</p>
-      <p class="mono">MELDKAMER STATUS: ONLINE</p>
-    </div>
-  </div>
-</footer>
+<div id="app"></div>
 
 <script>
-  // Mobile nav toggle
-  const toggle = document.querySelector('.navtoggle');
-  const navlinks = document.querySelector('.navlinks');
-  if(toggle){
-    toggle.addEventListener('click', () => {
-      const open = navlinks.style.display === 'flex';
-      navlinks.style.display = open ? 'none' : 'flex';
-      navlinks.style.flexDirection = 'column';
-      navlinks.style.position = 'absolute';
-      navlinks.style.top = '100%';
-      navlinks.style.left = '0';
-      navlinks.style.right = '0';
-      navlinks.style.background = 'rgba(10,15,26,0.98)';
-      navlinks.style.padding = '20px 28px';
-      navlinks.style.gap = '18px';
-      navlinks.style.borderBottom = '1px solid rgba(232,235,244,0.1)';
-    });
+/* ============================ CONFIG ============================ */
+const DISCORD_LINK = "https://discord.gg/JOUW-SERVER-INVITE"; // <-- vervang door je eigen Discord invite
+
+/* ============================ STATE ============================ */
+const STORE_KEY = "meldkamer_state_v2";
+let session = null;
+let state = { units: [], meldingen: [], verzoeken: [], intakes: [] };
+let pollTimer = null;
+let intakeWaitTimer = null;
+let selectedDienst = null;
+let selectedIntakeDienst = null;
+let myIntakeId = null;
+let seenVerzoekStatus = {};
+
+const DIENSTEN = {
+  politie:   { label:"Politie",    em:"🛡️" },
+  brandweer: { label:"Brandweer",  em:"🚒" },
+  ambulance: { label:"Ambulance",  em:"🚑" },
+  overig:    { label:"Overig",     em:"👤" },
+};
+function statusClass(s){
+  if(s==="Inzetbaar") return "inzetbaar";
+  if(s==="Aanrijdend") return "aanrijdend";
+  if(s==="Ter Plaatse") return "terplaatse";
+  if(s==="Niet Inzetbaar") return "niet";
+  if(s==="Retour") return "retour";
+  if(s==="Eigen Initiatief") return "eigen";
+  return "";
+}
+function uid(){ return Math.random().toString(36).slice(2,10); }
+function escapeHtml(s){ return (s||"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function isOnline(u){ return u.lastSeen && (Date.now() - u.lastSeen) < 8000; }
+
+/* ============================ STORAGE (gedeelde "database") ============================ */
+async function loadState(){
+  try{
+    const res = await window.storage.get(STORE_KEY, true);
+    if(res && res.value){ state = JSON.parse(res.value); }
+    if(!state.units) state.units=[];
+    if(!state.meldingen) state.meldingen=[];
+    if(!state.verzoeken) state.verzoeken=[];
+    if(!state.intakes) state.intakes=[];
+  }catch(e){
+    state = { units: [], meldingen: [], verzoeken: [], intakes: [] };
+    await saveState();
   }
+}
+async function saveState(){
+  try{ await window.storage.set(STORE_KEY, JSON.stringify(state), true); }
+  catch(e){ console.error("storage error", e); }
+}
 
-  // Scroll reveal
-  const revealEls = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if(entry.isIntersecting){
-        entry.target.classList.add('in');
-        io.unobserve(entry.target);
+/* ============================ ROOT RENDER ============================ */
+function render(){
+  const app = document.getElementById("app");
+  if(!session){ renderLogin(app); }
+  else if(session.role === "meldkamer"){ renderMeldkamer(app); }
+  else { renderHulpdienst(app); }
+}
+
+/* ============================ LOGIN ============================ */
+function renderLogin(app){
+  app.innerHTML = `
+    <div class="login-wrap">
+      <div class="login-card">
+        <p class="login-title">Meldkamer Systeem 2025</p>
+        <p class="login-sub">Kies hoe je wilt inloggen. Alles is realtime gekoppeld — ongeacht stad of eenheid.</p>
+        <div class="role-grid">
+          <div class="role-btn" id="btnMeldkamer"><span class="role-emoji">🖥️</span>Meldkamer</div>
+          <div class="role-btn" id="btnHulpdienst"><span class="role-emoji">🚓</span>Hulpdiensten</div>
+          <div class="role-btn" id="btnBurger"><span class="role-emoji">🙋</span>Intake aanvragen<br><span style="font-weight:400; color:var(--muted); font-size:11px;">(als burger inklokken)</span></div>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById("btnMeldkamer").onclick = () => renderMeldkamerLogin(app);
+  document.getElementById("btnHulpdienst").onclick = () => renderHulpdienstLogin(app);
+  document.getElementById("btnBurger").onclick = () => renderBurgerLogin(app);
+}
+
+function renderMeldkamerLogin(app){
+  app.innerHTML = `
+    <div class="login-wrap">
+      <div class="login-card">
+        <span class="back-link" id="back">&larr; Terug</span>
+        <p class="login-title">Inloggen als Meldkamer</p>
+        <p class="login-sub">Vul je standplaats in. Je ziet alle meldingen, eenheden en intakes, ongeacht locatie.</p>
+        <div class="field"><label>Standplaats meldkamer</label><input type="text" id="stad" placeholder="bv. Rotterdam"></div>
+        <div class="field"><label>Meldkamer naam / kanaal</label><input type="text" id="naam" placeholder="bv. OC/OPS" value="OC/OPS"></div>
+        <button class="btn wide" id="go">Inloggen</button>
+      </div>
+    </div>`;
+  document.getElementById("back").onclick = () => renderLogin(app);
+  document.getElementById("go").onclick = async () => {
+    const stad = document.getElementById("stad").value.trim() || "Onbekend";
+    const naam = document.getElementById("naam").value.trim() || "OC/OPS";
+    session = { role:"meldkamer", stad, naam };
+    await start();
+  };
+}
+
+function renderHulpdienstLogin(app){
+  selectedDienst = null;
+  app.innerHTML = `
+    <div class="login-wrap">
+      <div class="login-card">
+        <span class="back-link" id="back">&larr; Terug</span>
+        <p class="login-title">Inloggen als Hulpdienst</p>
+        <p class="login-sub">Kies je dienst en vul je eenheidsgegevens in. Je wordt automatisch ingeklokt.</p>
+        <div class="dienst-grid" id="diensten">
+          ${Object.entries(DIENSTEN).map(([k,v])=>`<div class="dienst-opt" data-k="${k}"><span class="em">${v.em}</span>${v.label}</div>`).join("")}
+        </div>
+        <div class="field"><label>Roepnummer / callsign</label><input type="text" id="callsign" placeholder="bv. MD22-01"></div>
+        <div class="field"><label>Standplaats / stad</label><input type="text" id="stad" placeholder="bv. Amsterdam"></div>
+        <button class="btn wide" id="go">Inloggen &amp; inklokken</button>
+      </div>
+    </div>`;
+  document.getElementById("back").onclick = () => renderLogin(app);
+  document.querySelectorAll(".dienst-opt").forEach(el=>{
+    el.onclick = () => { document.querySelectorAll(".dienst-opt").forEach(o=>o.classList.remove("sel")); el.classList.add("sel"); selectedDienst = el.dataset.k; };
+  });
+  document.getElementById("go").onclick = async () => {
+    if(!selectedDienst){ alert("Kies eerst een dienst."); return; }
+    const callsign = document.getElementById("callsign").value.trim();
+    const stad = document.getElementById("stad").value.trim() || "Onbekend";
+    if(!callsign){ alert("Vul een roepnummer in."); return; }
+    await loadState();
+    let unit = state.units.find(u => u.callsign.toLowerCase() === callsign.toLowerCase());
+    if(!unit){
+      unit = { id: uid(), dienst: selectedDienst, callsign, stad, status:"Inzetbaar", meldingId:null, lastSeen: Date.now() };
+      state.units.push(unit);
+    } else {
+      unit.dienst = selectedDienst; unit.stad = stad; unit.lastSeen = Date.now();
+    }
+    await saveState();
+    session = { role:"hulpdienst", unitId: unit.id, dienst: selectedDienst, callsign, stad };
+    await start();
+  };
+}
+
+/* ---- Burger / intake aanvragen ---- */
+function renderBurgerLogin(app){
+  selectedIntakeDienst = null;
+  app.innerHTML = `
+    <div class="login-wrap">
+      <div class="login-card">
+        <span class="back-link" id="back">&larr; Terug</span>
+        <p class="login-title">Intake aanvragen</p>
+        <p class="login-sub">Vraag aan om in te klokken bij een hulpdienst. De meldkamer beoordeelt je aanvraag; na goedkeuring krijg je een Discord-link om verder te praten.</p>
+        <div class="field"><label>Je naam</label><input type="text" id="bNaam" placeholder="bv. Jan Jansen"></div>
+        <div class="field"><label>Gewenste dienst</label>
+          <div class="dienst-grid" id="bDiensten">
+            ${Object.entries(DIENSTEN).map(([k,v])=>`<div class="dienst-opt" data-k="${k}"><span class="em">${v.em}</span>${v.label}</div>`).join("")}
+          </div>
+        </div>
+        <div class="field"><label>Bericht / reden</label><textarea id="bBericht" rows="3" placeholder="Korte toelichting voor de meldkamer"></textarea></div>
+        <button class="btn wide" id="go">Intake aanvragen</button>
+      </div>
+    </div>`;
+  document.getElementById("back").onclick = () => renderLogin(app);
+  document.querySelectorAll("#bDiensten .dienst-opt").forEach(el=>{
+    el.onclick = () => { document.querySelectorAll("#bDiensten .dienst-opt").forEach(o=>o.classList.remove("sel")); el.classList.add("sel"); selectedIntakeDienst = el.dataset.k; };
+  });
+  document.getElementById("go").onclick = async () => {
+    const naam = document.getElementById("bNaam").value.trim();
+    if(!naam){ alert("Vul je naam in."); return; }
+    if(!selectedIntakeDienst){ alert("Kies een gewenste dienst."); return; }
+    const bericht = document.getElementById("bBericht").value.trim();
+    await loadState();
+    const intake = { id: uid(), naam, dienst: selectedIntakeDienst, bericht, tijd: new Date().toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'}), status:"wachtend" };
+    state.intakes.push(intake);
+    await saveState();
+    myIntakeId = intake.id;
+    renderIntakeWait(app);
+  };
+}
+
+function renderIntakeWait(app){
+  const intake = state.intakes.find(i=>i.id===myIntakeId);
+  if(!intake) return;
+  if(intake.status === "wachtend"){
+    app.innerHTML = `
+      <div class="login-wrap">
+        <div class="login-card">
+          <div class="intake-wait">
+            <div class="spinner"></div>
+            <p class="login-title">Wachten op goedkeuring...</p>
+            <p class="login-sub">${DIENSTEN[intake.dienst].em} ${DIENSTEN[intake.dienst].label} — ${escapeHtml(intake.naam)}<br>Een meldkamer bekijkt je intake-aanvraag.</p>
+            <span class="back-link" id="cancel">Aanvraag annuleren</span>
+          </div>
+        </div>
+      </div>`;
+    document.getElementById("cancel").onclick = async () => {
+      await loadState();
+      state.intakes = state.intakes.filter(i=>i.id!==myIntakeId);
+      await saveState();
+      myIntakeId = null;
+      if(intakeWaitTimer) clearInterval(intakeWaitTimer);
+      renderLogin(app);
+    };
+  } else if(intake.status === "goedgekeurd"){
+    if(intakeWaitTimer) clearInterval(intakeWaitTimer);
+    app.innerHTML = `
+      <div class="login-wrap">
+        <div class="login-card">
+          <div class="intake-wait">
+            <p class="login-title">✅ Je bent ingeklokt!</p>
+            <p class="login-sub">${DIENSTEN[intake.dienst].em} Welkom, ${escapeHtml(intake.naam)}. De meldkamer heeft je aanvraag goedgekeurd.<br>Praat verder via Discord:</p>
+            <a class="btn discord wide" style="display:block; text-decoration:none; box-sizing:border-box; margin-bottom:12px;" href="${DISCORD_LINK}" target="_blank" rel="noopener">Open Discord</a>
+            <span class="back-link" id="back2">&larr; Terug naar login</span>
+          </div>
+        </div>
+      </div>`;
+    document.getElementById("back2").onclick = () => { myIntakeId=null; renderLogin(app); };
+  } else if(intake.status === "afgewezen"){
+    if(intakeWaitTimer) clearInterval(intakeWaitTimer);
+    app.innerHTML = `
+      <div class="login-wrap">
+        <div class="login-card">
+          <div class="intake-wait">
+            <p class="login-title">❌ Aanvraag afgewezen</p>
+            <p class="login-sub">Je intake-aanvraag is helaas niet goedgekeurd door de meldkamer.</p>
+            <span class="back-link" id="back2">&larr; Terug naar login</span>
+          </div>
+        </div>
+      </div>`;
+    document.getElementById("back2").onclick = () => { myIntakeId=null; renderLogin(app); };
+  }
+  if(intake.status==="wachtend" && !intakeWaitTimer){
+    intakeWaitTimer = setInterval(async () => {
+      await loadState();
+      renderIntakeWait(document.getElementById("app"));
+    }, 2000);
+  }
+}
+
+/* ============================ SESSION LIFECYCLE ============================ */
+async function start(){
+  await loadState();
+  render();
+  if(pollTimer) clearInterval(pollTimer);
+  pollTimer = setInterval(async () => {
+    await loadState();
+    if(session && session.role==="hulpdienst"){
+      const u = state.units.find(x=>x.id===session.unitId);
+      if(u){ u.lastSeen = Date.now(); await saveState(); }
+      updateHulpdienstLiveParts();
+    } else if(session && session.role==="meldkamer"){
+      updateMeldkamerLiveParts();
+    }
+  }, 2500);
+}
+function logout(){
+  session = null;
+  if(pollTimer) clearInterval(pollTimer);
+  render();
+}
+
+/* ============================ MELDKAMER VIEW ============================ */
+function renderMeldkamer(app){
+  const now = new Date();
+  app.innerHTML = `
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="brand">Meldkamer Systeem 2025 <span class="sub">Made By Lars B.</span></div>
+        <span class="pill">${escapeHtml(session.naam)} — ${escapeHtml(session.stad)}</span>
+      </div>
+      <div class="topbar-right">
+        <span class="clock" id="clock">${now.toLocaleString('nl-NL')}</span>
+        <button class="logout" id="logout">Uitloggen</button>
+      </div>
+    </div>
+    <div class="board">
+      <div class="panel">
+        <div class="panel-head"><span>⚠️ Openstaande Meldingen</span><button class="icon-btn" id="newMelding">+</button></div>
+        <div class="panel-body" id="openstaand" style="max-height:70vh;"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span>⚠️ Uitgegeven Meldingen</span></div>
+        <div class="panel-body" id="uitgegeven" style="max-height:70vh;"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span>👥 Eenheden (ingeklokt, alle steden)</span></div>
+        <div class="panel-body" id="eenheden" style="max-height:70vh;"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span>🙋 Intake verzoeken</span></div>
+        <div class="panel-body" id="intakes" style="max-height:32vh;"></div>
+        <div class="panel-head" style="border-top:1px solid var(--line);"><span>📨 Verzoeken</span></div>
+        <div class="panel-body" id="verzoeken" style="max-height:32vh;"></div>
+      </div>
+    </div>`;
+  document.getElementById("logout").onclick = logout;
+  document.getElementById("newMelding").onclick = openNewMeldingModal;
+  updateMeldkamerLiveParts();
+}
+
+function updateMeldkamerLiveParts(){
+  if(!session || session.role!=="meldkamer") return;
+  const clock = document.getElementById("clock");
+  if(clock) clock.textContent = new Date().toLocaleString('nl-NL');
+
+  const open = state.meldingen.filter(m=>m.status==="openstaand");
+  const uitg = state.meldingen.filter(m=>m.status==="uitgegeven");
+
+  const openEl = document.getElementById("openstaand");
+  if(openEl){
+    openEl.innerHTML = open.length ? open.map(m=>`
+      <div class="melding-card" data-melding="${m.id}" ondragover="event.preventDefault(); this.classList.add('drag-over');" ondragleave="this.classList.remove('drag-over');" ondrop="window.__dropUnitOnMelding(event,'${m.id}')" onclick="window.__openUnitPicker('${m.id}')">
+        <div class="m-top"><span>${escapeHtml(m.locatie||'Onbekende locatie')}</span><span>${m.tijd}</span></div>
+        <div class="m-tekst">${escapeHtml(m.tekst)}</div>
+        <div class="m-tags">Kanaal: ${escapeHtml(m.kanaal||'-')} — sleep een eenheid hierheen of klik om toe te wijzen</div>
+      </div>`).join("") : `<div class="empty-hint">Geen openstaande meldingen. Klik + om een melding te maken.</div>`;
+  }
+  const uitgEl = document.getElementById("uitgegeven");
+  if(uitgEl){
+    uitgEl.innerHTML = uitg.length ? uitg.map(m=>{
+      const u = state.units.find(u=>u.id===m.unitId);
+      return `<div class="melding-card uitgegeven">
+        <div class="m-top"><span>${escapeHtml(m.locatie||'Onbekende locatie')}</span><span>${m.tijd}</span></div>
+        <div class="m-tekst">${escapeHtml(m.tekst)}</div>
+        <div class="m-tags">Eenheid: ${u? DIENSTEN[u.dienst].em+' '+escapeHtml(u.callsign)+' ('+escapeHtml(u.stad)+')':'-'}</div>
+      </div>`;
+    }).join("") : `<div class="empty-hint">Nog geen meldingen uitgegeven.</div>`;
+  }
+  const uEl = document.getElementById("eenheden");
+  if(uEl){
+    uEl.innerHTML = state.units.length ? state.units.map(u=>`
+      <div class="unit-row" draggable="true" ondragstart="window.__dragUnit(event,'${u.id}')" ondragend="this.classList.remove('dragging')" onclick="window.__openUnitAssign('${u.id}')">
+        <div class="u-left">
+          <span class="unit-em">${DIENSTEN[u.dienst].em}</span>
+          <div>
+            <div class="u-name"><span class="online-dot ${isOnline(u)?'on':'off'}"></span>${escapeHtml(u.callsign)}</div>
+            <div class="u-sub">${DIENSTEN[u.dienst].label} — ${escapeHtml(u.stad)} — ${isOnline(u)?'ingeklokt':'offline'}</div>
+          </div>
+        </div>
+        <span class="u-status ${statusClass(u.status)}">${u.status}</span>
+      </div>`).join("") : `<div class="empty-hint">Nog geen eenheden ingeklokt.</div>`;
+  }
+  const iEl = document.getElementById("intakes");
+  if(iEl){
+    const wachtend = state.intakes.filter(i=>i.status==="wachtend");
+    iEl.innerHTML = wachtend.length ? wachtend.map(i=>`
+      <div class="req-item">
+        <b>${DIENSTEN[i.dienst].em} ${escapeHtml(i.naam)} — wil ${DIENSTEN[i.dienst].label.toLowerCase()}</b>
+        ${escapeHtml(i.bericht||'(geen toelichting)')} <br><span style="color:var(--muted);">${i.tijd}</span>
+        <div class="req-actions">
+          <button class="btn-mini btn-approve" onclick="window.__decideIntake('${i.id}','goedgekeurd')">Goedkeuren</button>
+          <button class="btn-mini btn-reject" onclick="window.__decideIntake('${i.id}','afgewezen')">Afwijzen</button>
+        </div>
+      </div>`).join("") : `<div class="empty-hint">Geen openstaande intakes.</div>`;
+  }
+  const vEl = document.getElementById("verzoeken");
+  if(vEl){
+    const list = [...state.verzoeken].reverse().slice(0,20);
+    vEl.innerHTML = list.length ? list.map(v=>`
+      <div class="req-item ${v.type==='noodknop'?'nood':''}">
+        <b>${v.type==='noodknop'?'🔴 NOODKNOP':(v.type==='spraak_urgent'?'🗣️ Spraak URGENT':'🗣️ Spraakaanvraag')} — ${escapeHtml(v.callsign)}</b>
+        ${v.tijd}
+        ${v.status==='open' ? `
+          <div class="req-actions">
+            <button class="btn-mini btn-approve" onclick="window.__decideVerzoek('${v.id}','goedgekeurd')">Goedkeuren</button>
+            <button class="btn-mini btn-reject" onclick="window.__decideVerzoek('${v.id}','afgewezen')">Afwijzen</button>
+          </div>` : `<span class="status-tag ${v.status}">${v.status}</span>`}
+      </div>`).join("") : `<div class="empty-hint">Geen verzoeken.</div>`;
+  }
+}
+
+/* drag & drop */
+window.__dragUnit = function(ev, unitId){
+  ev.dataTransfer.setData("text/plain", unitId);
+  ev.currentTarget.classList.add("dragging");
+};
+window.__dropUnitOnMelding = async function(ev, meldingId){
+  ev.preventDefault();
+  ev.currentTarget.classList.remove("drag-over");
+  const unitId = ev.dataTransfer.getData("text/plain");
+  if(!unitId) return;
+  await assignUnitToMelding(unitId, meldingId);
+};
+async function assignUnitToMelding(unitId, meldingId){
+  await loadState();
+  const melding = state.meldingen.find(x=>x.id===meldingId);
+  const unit = state.units.find(x=>x.id===unitId);
+  if(melding && unit && melding.status==="openstaand"){
+    melding.status = "uitgegeven";
+    melding.unitId = unit.id;
+    unit.meldingId = melding.id;
+    unit.status = "Aanrijdend";
+    await saveState();
+    updateMeldkamerLiveParts();
+  }
+}
+
+/* new melding modal */
+function openNewMeldingModal(){
+  const bg = document.createElement("div");
+  bg.className = "modal-bg";
+  bg.innerHTML = `
+    <div class="modal">
+      <h3>Nieuwe melding</h3>
+      <div class="field"><label>Melding</label><textarea id="mTekst" rows="3" placeholder="Omschrijving van de melding"></textarea></div>
+      <div class="field"><label>Locatie</label><input id="mLocatie" placeholder="bv. Damrak 1, Amsterdam"></div>
+      <div class="field"><label>Incidentenkanaal</label><input id="mKanaal" placeholder="bv. Kanaal 3"></div>
+      <div class="modal-actions">
+        <button class="btn ghost" id="cancel">Annuleren</button>
+        <button class="btn" id="save">Opslaan</button>
+      </div>
+    </div>`;
+  document.body.appendChild(bg);
+  bg.querySelector("#cancel").onclick = () => bg.remove();
+  bg.querySelector("#save").onclick = async () => {
+    const tekst = bg.querySelector("#mTekst").value.trim();
+    if(!tekst){ alert("Vul een omschrijving in."); return; }
+    const melding = { id: uid(), tekst, locatie: bg.querySelector("#mLocatie").value.trim(), kanaal: bg.querySelector("#mKanaal").value.trim(),
+      tijd: new Date().toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'}), status:"openstaand", unitId:null };
+    await loadState();
+    state.meldingen.push(melding);
+    await saveState();
+    bg.remove();
+    updateMeldkamerLiveParts();
+  };
+}
+
+window.__openUnitPicker = function(meldingId){
+  const units = state.units.filter(u=>isOnline(u));
+  const bg = document.createElement("div");
+  bg.className = "modal-bg";
+  bg.innerHTML = `
+    <div class="modal">
+      <h3>Wijs een eenheid toe</h3>
+      <p style="color:var(--muted); font-size:13px; margin-top:-10px;">Je kunt een eenheid ook direct naar de melding slepen.</p>
+      <div class="field"><select id="unitSel">
+        <option value="">— Kies eenheid —</option>
+        ${units.map(u=>`<option value="${u.id}">${DIENSTEN[u.dienst].label} ${u.callsign} (${u.stad})</option>`).join("")}
+      </select></div>
+      <div class="modal-actions">
+        <button class="btn ghost" id="cancel">Sluiten</button>
+        <button class="btn" id="assign">Toewijzen</button>
+      </div>
+    </div>`;
+  document.body.appendChild(bg);
+  bg.querySelector("#cancel").onclick = () => bg.remove();
+  bg.querySelector("#assign").onclick = async () => {
+    const uid_ = bg.querySelector("#unitSel").value;
+    if(uid_){ await assignUnitToMelding(uid_, meldingId); }
+    bg.remove();
+  };
+};
+window.__openUnitAssign = function(unitId){
+  const u = state.units.find(x=>x.id===unitId);
+  if(!u) return;
+  const openMeldingen = state.meldingen.filter(m=>m.status==="openstaand");
+  const bg = document.createElement("div");
+  bg.className = "modal-bg";
+  bg.innerHTML = `
+    <div class="modal">
+      <h3>${DIENSTEN[u.dienst].em} ${escapeHtml(u.callsign)} — ${escapeHtml(u.stad)}</h3>
+      <p style="color:var(--muted); font-size:13px;">Huidige status: <b style="color:var(--text)">${u.status}</b> — ${isOnline(u)?'ingeklokt':'offline'}</p>
+      <div class="field"><label>Wijs openstaande melding toe</label>
+        <select id="assignSel"><option value="">— Geen melding —</option>
+        ${openMeldingen.map(m=>`<option value="${m.id}">${escapeHtml(m.tekst).slice(0,50)}</option>`).join("")}
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn ghost" id="cancel">Sluiten</button>
+        <button class="btn" id="assign">Toewijzen</button>
+      </div>
+    </div>`;
+  document.body.appendChild(bg);
+  bg.querySelector("#cancel").onclick = () => bg.remove();
+  bg.querySelector("#assign").onclick = async () => {
+    const mid = bg.querySelector("#assignSel").value;
+    if(mid){ await assignUnitToMelding(unitId, mid); }
+    bg.remove();
+  };
+};
+window.__decideIntake = async function(id, decision){
+  await loadState();
+  const intake = state.intakes.find(x=>x.id===id);
+  if(!intake) return;
+  intake.status = decision;
+  if(decision === "goedgekeurd"){
+    const unit = { id: uid(), dienst: intake.dienst, callsign: intake.naam, stad: session ? session.stad : "Onbekend", status:"Inzetbaar", meldingId:null, lastSeen: Date.now() };
+    state.units.push(unit);
+    intake.unitId = unit.id;
+  }
+  await saveState();
+  updateMeldkamerLiveParts();
+};
+window.__decideVerzoek = async function(id, decision){
+  await loadState();
+  const v = state.verzoeken.find(x=>x.id===id);
+  if(!v) return;
+  v.status = decision;
+  await saveState();
+  updateMeldkamerLiveParts();
+};
+
+/* ============================ HULPDIENST VIEW ============================ */
+function renderHulpdienst(app){
+  const u = state.units.find(x=>x.id===session.unitId) || {status:"Inzetbaar", dienst:session.dienst, callsign:session.callsign, stad:session.stad};
+  app.innerHTML = `
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="brand">Meldkamer Systeem 2025 <span class="sub">Made By Lars B.</span></div>
+      </div>
+      <div class="topbar-right">
+        <span class="pill">${DIENSTEN[u.dienst].em} ${escapeHtml(u.callsign)} — ${escapeHtml(u.stad)}</span>
+        <span class="pill" id="statusPill">${u.status}</span>
+        <button class="logout" id="logout">Uitloggen</button>
+      </div>
+    </div>
+    <div class="grid3">
+      <div class="panel">
+        <div class="panel-head"><span>⚠️ Melding</span></div>
+        <div class="panel-body" id="meldingView" style="max-height:34vh;"></div>
+        <div class="panel-head" style="border-top:1px solid var(--line);"><span>📨 Mijn verzoeken</span></div>
+        <div class="panel-body" id="mijnVerzoeken" style="max-height:22vh;"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span>📝 Kladblok</span><span style="color:var(--muted); font-weight:400;">${new Date().toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})}</span></div>
+        <textarea class="kladblok" id="kladblok" placeholder="Maak hier notities aan."></textarea>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span>${DIENSTEN[u.dienst].em} ${escapeHtml(u.callsign)}</span><span style="color:var(--muted); font-weight:400;">${escapeHtml(u.stad)}</span></div>
+        <div class="status-grid" id="statusGrid"></div>
+      </div>
+    </div>`;
+  document.getElementById("logout").onclick = logout;
+  buildStatusGrid();
+  updateHulpdienstLiveParts();
+}
+
+function buildStatusGrid(){
+  const grid = document.getElementById("statusGrid");
+  if(!grid) return;
+  const items = [
+    {label:"Inzetbaar", action:()=>setUnitStatus("Inzetbaar")},
+    {label:"Aanrijdend", action:()=>setUnitStatus("Aanrijdend")},
+    {label:"Ter Plaatse", action:()=>setUnitStatus("Ter Plaatse")},
+    {label:"Niet Inzetbaar", action:()=>setUnitStatus("Niet Inzetbaar")},
+    {label:"Retour", action:()=>setUnitStatus("Retour")},
+    {label:"Spraakaanvraag", action:()=>sendVerzoek("spraak")},
+    {label:"Spraakaanvraag URGENT", action:()=>sendVerzoek("spraak_urgent")},
+    {label:"Eigen Initiatief", action:()=>setUnitStatus("Eigen Initiatief")},
+    {label:"NOODKNOP", nood:true, action:()=>sendVerzoek("noodknop")},
+  ];
+  grid.innerHTML = items.map((it,i)=>`<div class="status-btn ${it.nood?'nood':''}" data-i="${i}">${it.label}</div>`).join("");
+  grid.querySelectorAll(".status-btn").forEach((el,i)=>{ el.onclick = () => items[i].action(); });
+}
+
+async function setUnitStatus(status){
+  await loadState();
+  const u = state.units.find(x=>x.id===session.unitId);
+  if(u){
+    u.status = status;
+    u.lastSeen = Date.now();
+    await saveState();
+    showToast("Status aangepast!");
+    updateHulpdienstLiveParts();
+  }
+}
+async function sendVerzoek(type){
+  await loadState();
+  const u = state.units.find(x=>x.id===session.unitId);
+  if(!u) return;
+  const v = { id: uid(), unitId:u.id, callsign:u.callsign, type, status:"open",
+    tijd: new Date().toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'}) };
+  state.verzoeken.push(v);
+  seenVerzoekStatus[v.id] = "open";
+  await saveState();
+  showToast(type==="noodknop" ? "Noodknop verzonden!" : "Verzoek verzonden!");
+  updateHulpdienstLiveParts();
+}
+function showToast(msg){
+  const t = document.createElement("div");
+  t.className = "toast";
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 2700);
+}
+
+function updateHulpdienstLiveParts(){
+  if(!session || session.role!=="hulpdienst") return;
+  const u = state.units.find(x=>x.id===session.unitId);
+  if(!u) return;
+  const pill = document.getElementById("statusPill");
+  if(pill){ pill.textContent = u.status; }
+
+  document.querySelectorAll(".status-btn").forEach(btn=>{
+    const label = btn.textContent.trim();
+    if(label === u.status){ btn.classList.add("active"); } else { btn.classList.remove("active"); }
+  });
+
+  const mView = document.getElementById("meldingView");
+  if(mView){
+    const m = u.meldingId ? state.meldingen.find(x=>x.id===u.meldingId) : null;
+    mView.innerHTML = m ? `<div class="melding-view">
+<b>Locatie:</b> ${escapeHtml(m.locatie||'-')}
+<b>Incidentenkanaal:</b> ${escapeHtml(m.kanaal||'-')}
+<b>Tijd:</b> ${m.tijd}
+
+${escapeHtml(m.tekst)}
+      </div>` : `<div class="empty-hint" style="padding:16px;">Geen melding toegewezen.</div>`;
+  }
+  const mv = document.getElementById("mijnVerzoeken");
+  if(mv){
+    const mine = state.verzoeken.filter(v=>v.unitId===u.id).slice(-6).reverse();
+    mv.innerHTML = mine.length ? mine.map(v=>{
+      if(seenVerzoekStatus[v.id] !== undefined && seenVerzoekStatus[v.id] !== v.status && v.status !== "open"){
+        showToast(v.status === "goedgekeurd" ? "Verzoek goedgekeurd!" : "Verzoek afgewezen.");
       }
-    });
-  }, { threshold: 0.12 });
-  revealEls.forEach(el => io.observe(el));
-</script>
+      seenVerzoekStatus[v.id] = v.status;
+      return `<div class="mini-verzoek"><span>${v.type==='noodknop'?'🔴 Noodknop':(v.type==='spraak_urgent'?'🗣️ Urgent':'🗣️ Spraak')} ${v.tijd}</span><span class="status-tag ${v.status==='open'?'wachtend':v.status}">${v.status==='open'?'wachtend':v.status}</span></div>`;
+    }).join("") : `<div class="empty-hint">Nog geen verzoeken verstuurd.</div>`;
+  }
+}
 
+/* ============================ INIT ============================ */
+render();
+</script>
 </body>
 </html>
