@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<title>Meldkamer Systeem 2025</title>
+<style>
+  :root{
+    --bg:#0d0f1e; --bg-soft:#12152a; --panel:#171b34; --panel-2:#1e2340; --panel-3:#262c50;
+    --line:#2c3260; --line-soft:#232852;
+    --text:#f2f4fc; --muted:#8991ba; --muted-2:#6b729c;
+    --accent:#5b7cfa; --accent-d:#3f5fe0; --accent-soft:rgba(91,124,250,.15);
+    --teal:#28d0a6; --teal-d:#1fae8a;
+    --red:#f14b48; --red-d:#d43733; --red-soft:rgba(241,75,72,.15);
+    --amber:#f2b544; --amber-soft:rgba(242,181,68,.15);
+    --purple:#a374f5; --purple-soft:rgba(163,116,245,.15);
+    --radius-lg:20px; --radius:14px; --radius-sm:9px;
+    --shadow:0 10px 30px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Arial,sans-serif;
+    background:
+      radial-gradient(900px 500px at 85% -10%, rgba(91,124,250,.16), transparent 60%),
+      radial-gradient(700px 500px at 5% 10%, rgba(163,116,245,.10), transparent 55%),
+      var(--bg);
+    color:var(--text); min-height:100vh;}
+  #app{min-height:100vh; display:flex; flex-direction:column;}
+  a{color:var(--teal);}
+  ::-webkit-scrollbar{width:8px; height:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--line); border-radius:8px;}
+
+  /* ---------------- LOGIN ---------------- */
+  .login-wrap{flex:1; display:flex; align-items:center; justify-content:center; padding:24px;}
+  .login-shell{width:100%; max-width:920px;}
+  .brand-hero{text-align:center; margin-bottom:30px;}
+  .brand-hero .logo{font-size:34px; margin-bottom:6px;}
+  .brand-hero h1{font-size:26px; margin:0 0 6px; letter-spacing:-.01em;}
+  .brand-hero p{color:var(--muted); margin:0; font-size:14px;}
+
+  .role-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+  @media (max-width:760px){ .role-grid{grid-template-columns:1fr;} }
+  .role-card{
+    background:linear-gradient(155deg, var(--panel-2), var(--panel));
+    border:1px solid var(--line); border-radius:var(--radius-lg); padding:28px 20px;
+    cursor:pointer; text-align:left; transition:.18s; position:relative; overflow:hidden;
+  }
+  .role-card:hover{transform:translateY(-4px); border-color:var(--accent); box-shadow:var(--shadow);}
+  .role-card .em{font-size:32px; display:block; margin-bottom:14px;}
+  .role-card h3{margin:0 0 6px; font-size:17px;}
+  .role-card p{margin:0; color:var(--muted); font-size:12.5px; line-height:1.5;}
+
+  .card{background:linear-gradient(155deg, var(--panel-2), var(--panel)); border:1px solid var(--line);
+    border-radius:var(--radius-lg); padding:32px; box-shadow:var(--shadow); max-width:480px; margin:0 auto;}
+  .back-link{color:var(--muted); font-size:13px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; margin-bottom:18px;}
+  .back-link:hover{color:var(--text);}
+  .card h2{margin:0 0 4px; font-size:20px;}
+  .card .desc{color:var(--muted); font-size:13px; margin:0 0 24px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block; font-size:11px; color:var(--muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:.06em; font-weight:600;}
+  .field input, .field select, .field textarea{
+    width:100%; background:var(--bg-soft); border:1px solid var(--line); color:var(--text);
+    padding:11px 13px; border-radius:var(--radius-sm); font-size:14px; font-family:inherit;}
+  .field input:focus, .field select:focus, .field textarea:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft);}
+  .dienst-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:20px;}
+  .dienst-opt{background:var(--bg-soft); border:2px solid var(--line); border-radius:var(--radius-sm); padding:12px 4px;
+    text-align:center; cursor:pointer; font-size:11.5px; font-weight:600; transition:.12s;}
+  .dienst-opt .em{font-size:20px; display:block; margin-bottom:5px;}
+  .dienst-opt.sel{border-color:var(--accent); background:var(--accent-soft);}
+  .btn{background:var(--accent); border:none; color:#fff; padding:12px 20px; border-radius:var(--radius-sm);
+    font-weight:700; font-size:14px; cursor:pointer; transition:.15s;}
+  .btn:hover{background:var(--accent-d);}
+  .btn.wide{width:100%;}
+  .btn.ghost{background:transparent; border:1px solid var(--line); color:var(--text);}
+  .btn.ghost:hover{border-color:var(--accent);}
+  .btn.teal{background:var(--teal); color:#04241c;}
+  .btn.teal:hover{filter:brightness(1.08);}
+  .btn.red{background:var(--red);}
+  .btn.red:hover{background:var(--red-d);}
+  .btn.small{padding:7px 13px; font-size:12px; border-radius:8px;}
+
+  /* ---------------- TOPBAR ---------------- */
+  .topbar{display:flex; align-items:center; justify-content:space-between; padding:14px 22px;
+    background:linear-gradient(90deg, var(--panel), var(--panel-2)); border-bottom:1px solid var(--line); flex-wrap:wrap; gap:10px;}
+  .topbar-left{display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
+  .brand{font-weight:800; font-size:15px; display:flex; align-items:center; gap:8px;}
+  .brand .sub{color:var(--muted); font-weight:400; font-size:11.5px;}
+  .pill{background:var(--panel-3); border:1px solid var(--line); border-radius:999px; padding:6px 14px; font-size:12.5px; font-weight:600;}
+  .pill.on{color:var(--teal); border-color:var(--teal); background:rgba(40,208,166,.1);}
+  .pill.off{color:var(--muted-2);}
+  .topbar-right{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .clock{font-size:12.5px; color:var(--muted); font-variant-numeric:tabular-nums;}
+  .icon-only-btn{background:var(--panel-3); border:1px solid var(--line); color:var(--text); border-radius:10px; padding:8px 13px; cursor:pointer; font-size:13px; font-weight:600;}
+  .icon-only-btn:hover{border-color:var(--red); color:var(--red);}
+  .klokbtn{border-radius:10px; padding:9px 16px; cursor:pointer; font-size:13px; font-weight:800; border:none;}
+  .klokbtn.uit{background:var(--teal); color:#04241c;}
+  .klokbtn.in{background:var(--red); color:#fff;}
+
+  /* ---------------- MELDKAMER BOARD ---------------- */
+  .board{flex:1; display:grid; gap:16px; padding:18px; grid-template-columns:1.05fr 1fr 1.15fr; align-items:start;}
+  @media (max-width:1100px){ .board{grid-template-columns:1fr;} }
+  .stack{display:flex; flex-direction:column; gap:16px;}
+  .panel{background:linear-gradient(160deg, var(--panel-2), var(--panel)); border:1px solid var(--line);
+    border-radius:var(--radius-lg); display:flex; flex-direction:column; overflow:hidden; box-shadow:var(--shadow);}
+  .panel-head{display:flex; align-items:center; justify-content:space-between; padding:13px 16px;
+    border-bottom:1px solid var(--line); font-weight:700; font-size:13.5px;}
+  .panel-head .count{color:var(--muted); font-weight:600; font-size:11.5px; background:var(--panel-3); padding:3px 9px; border-radius:999px;}
+  .panel-head .icon-btn{background:var(--accent); border:none; color:#fff; width:28px; height:28px; border-radius:9px; cursor:pointer; font-size:17px; line-height:1; display:flex; align-items:center; justify-content:center;}
+  .panel-head .icon-btn:hover{background:var(--accent-d);}
+  .panel-body{padding:12px; flex:1; overflow-y:auto; min-height:80px; max-height:32vh;}
+  .panel-body.tall{max-height:50vh;}
+  .empty-hint{color:var(--muted-2); font-size:12.5px; padding:14px 4px; text-align:center;}
+  .drag-hint{font-size:11px; color:var(--muted-2); padding:0 16px 8px;}
+
+  .melding-card{background:var(--panel-3); border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:var(--radius-sm); padding:11px 13px; margin-bottom:9px; cursor:pointer; transition:.12s;}
+  .melding-card:hover{border-color:var(--accent);}
+  .melding-card.uitgegeven{border-left-color:var(--teal);}
+  .melding-card.drag-over{border-color:var(--teal); box-shadow:0 0 0 2px var(--teal) inset; background:var(--panel-3);}
+  .melding-card .m-top{display:flex; justify-content:space-between; font-size:10.5px; color:var(--muted); margin-bottom:4px;}
+  .melding-card .m-tekst{font-size:13px; line-height:1.4;}
+  .melding-card .m-tags{margin-top:6px; font-size:10.5px; color:var(--muted-2);}
+
+  .unit-row{display:flex; align-items:center; justify-content:space-between; gap:10px; background:var(--panel-3);
+    border:1px solid var(--line); border-radius:var(--radius-sm); padding:10px 12px; margin-bottom:8px; cursor:grab;}
+  .unit-row:active{cursor:grabbing;}
+  .unit-row.dragging{opacity:.4;}
+  .unit-row:hover{border-color:var(--accent);}
+  .unit-row .u-left{display:flex; align-items:center; gap:10px;}
+  .unit-em{font-size:17px;}
+  .u-name{font-weight:700; font-size:13px;}
+  .u-sub{font-size:10.5px; color:var(--muted);}
+  .u-status{font-size:10.5px; font-weight:800; padding:4px 9px; border-radius:999px; white-space:nowrap;}
+  .u-status.inzetbaar{background:rgba(40,208,166,.15); color:var(--teal);}
+  .u-status.aanrijdend{background:var(--amber-soft); color:var(--amber);}
+  .u-status.terplaatse{background:var(--accent-soft); color:var(--accent);}
+  .u-status.niet{background:var(--red-soft); color:var(--red);}
+  .u-status.retour{background:rgba(139,145,186,.15); color:var(--muted);}
+  .u-status.eigen{background:var(--purple-soft); color:var(--purple);}
+
+  .req-item{background:var(--panel-3); border:1px solid var(--amber); border-radius:var(--radius-sm); padding:10px 12px; margin-bottom:8px; font-size:12px;}
+  .req-item.nood{border-color:var(--red);}
+  .req-item.goedgekeurd{border-color:var(--teal);}
+  .req-item.afgewezen{border-color:var(--line); opacity:.65;}
+  .req-item b{display:block; margin-bottom:2px;}
+  .req-actions{display:flex; gap:8px; margin-top:8px;}
+  .status-tag{font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:6px; display:inline-block; margin-top:6px;}
+  .status-tag.wachtend{background:var(--amber-soft); color:var(--amber);}
+  .status-tag.goedgekeurd{background:rgba(40,208,166,.15); color:var(--teal);}
+  .status-tag.afgewezen{background:var(--red-soft); color:var(--red);}
+
+  /* ---------------- HULPDIENST BOARD ---------------- */
+  .grid3{display:grid; grid-template-columns:1fr 1fr 1.25fr; gap:16px; padding:18px; flex:1;}
+  @media (max-width:1000px){ .grid3{grid-template-columns:1fr;} }
+  .melding-view{padding:16px; font-size:14px; line-height:1.75; white-space:pre-wrap;}
+  .melding-view .lbl{color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.05em; font-weight:700;}
+  .banner{margin:10px 14px 0; padding:10px 13px; border-radius:var(--radius-sm); font-size:12.5px; border:1px solid var(--teal); background:rgba(40,208,166,.08); color:var(--teal);}
+  .banner.warn{border-color:var(--red); background:var(--red-soft); color:var(--red);}
+  textarea.kladblok{width:100%; height:100%; min-height:260px; background:transparent; border:none; color:var(--text); resize:none; font-family:inherit; font-size:14px; padding:16px;}
+  textarea.kladblok:focus{outline:none;}
+  .status-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:14px;}
+  .status-btn{background:var(--panel-3); border:1px solid var(--line); border-radius:var(--radius); color:var(--text); padding:18px 6px; font-weight:700; font-size:12.5px; cursor:pointer; min-height:78px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; text-align:center; transition:.1s; user-select:none;}
+  .status-btn .b-em{font-size:19px;}
+  .status-btn:hover{border-color:var(--accent); transform:translateY(-1px);}
+  .status-btn.active{background:var(--accent); border-color:var(--accent); box-shadow:inset 0 0 0 2px rgba(255,255,255,.22);}
+  .status-btn.pressed{transform:scale(.93); filter:brightness(1.25);}
+  .status-btn.nood{background:var(--red); border-color:var(--red-d); color:#fff;}
+  .status-btn.nood:hover{background:var(--red-d);}
+  .status-btn.nood.pressed{background:#ff2e1f;}
+
+  .toast{position:fixed; top:18px; right:18px; background:var(--teal); color:#04241c; font-weight:800; padding:11px 20px; border-radius:11px; box-shadow:var(--shadow); z-index:60; font-size:13px; animation:fade 2.6s forwards;}
+  @keyframes fade{0%{opacity:0; transform:translateY(-10px);} 10%{opacity:1; transform:translateY(0);} 85%{opacity:1;} 100%{opacity:0;}}
+
+  .modal-bg{position:fixed; inset:0; background:rgba(6,8,20,.65); backdrop-filter:blur(2px); display:flex; align-items:center; justify-content:center; z-index:40; padding:20px;}
+  .modal{background:linear-gradient(160deg, var(--panel-2), var(--panel)); border:1px solid var(--line); border-radius:var(--radius-lg); padding:26px; width:100%; max-width:460px; box-shadow:var(--shadow);}
+  .modal h3{margin:0 0 16px;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .spinner{width:36px; height:36px; border:3px solid var(--line); border-top-color:var(--accent); border-radius:50%; animation:spin 1s linear infinite; margin:0 auto 18px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .sync-note{position:fixed; bottom:14px; left:14px; font-size:11px; color:var(--muted-2); background:var(--panel); border:1px solid var(--line); padding:6px 12px; border-radius:999px; z-index:30;}
+  .sync-note.err{color:var(--amber); border-color:var(--amber);}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+/* =====================================================================
+   DATA-LAAG: elk record (eenheid, melding, verzoek, intake) staat onder
+   zijn eigen sleutel in de gedeelde opslag. Zo kan een update van één
+   record NOOIT de data van andere records overschrijven of wissen.
+===================================================================== */
+let session = null;
+let state = { units: [], meldingen: [], verzoeken: [], intakes: [] };
+let pollTimer = null;
+let selectedDienst = null;
+let syncOk = true;
+
+const DIENSTEN = {
+  politie:   { label:"Politie",    em:"🛡️" },
+  brandweer: { label:"Brandweer",  em:"🚒" },
+  ambulance: { label:"Ambulance",  em:"🚑" },
+  overig:    { label:"Overig",     em:"👤" },
+};
+function statusClass(s){
+  if(s==="Inzetbaar") return "inzetbaar";
+  if(s==="Aanrijdend") return "aanrijdend";
+  if(s==="Ter Plaatse") return "terplaatse";
+  if(s==="Niet Inzetbaar") return "niet";
+  if(s==="Retour") return "retour";
+  if(s==="Eigen Initiatief") return "eigen";
+  return "";
+}
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+function nowTime(){ return new Date().toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'}); }
+function escapeHtml(s){ return (s||"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function linkify(s){ const esc = escapeHtml(s); return esc.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>'); }
+
+/* -------- generieke, veilige storage-helpers (nooit gooien) -------- */
+async function storGet(key){
+  try{ const r = await window.storage.get(key, true); return r ? JSON.parse(r.value) : null; }
+  catch(e){ return null; }
+}
+async function storSet(key, obj){
+  try{ await window.storage.set(key, JSON.stringify(obj), true); syncOk = true; return true; }
+  catch(e){ console.error("opslaan mislukt:", key, e); syncOk = false; return false; }
+}
+async function storDelete(key){ try{ await window.storage.delete(key, true); }catch(e){} }
+async function storListValues(prefix){
+  try{
+    const listRes = await window.storage.list(prefix, true);
+    if(!listRes || !listRes.keys || !listRes.keys.length) return [];
+    const vals = await Promise.all(listRes.keys.map(k => storGet(k)));
+    syncOk = true;
+    return vals.filter(Boolean);
+  }catch(e){ syncOk = false; return []; }
+}
+
+/* -------- entiteiten laden / opslaan -------- */
+async function loadState(){
+  const [units, meldingen, verzoeken, intakes] = await Promise.all([
+    storListValues("unit:"), storListValues("melding:"), storListValues("verzoek:"), storListValues("intake:")
+  ]);
+  // Alleen overschrijven als we daadwerkelijk iets (of terecht niets) terugkregen;
+  // bij twijfel houden we de lokaal bekende data aan i.p.v. leeg te tonen.
+  state = { units, meldingen, verzoeken, intakes };
+}
+async function saveUnit(u){ return storSet("unit:"+u.id, u); }
+async function saveMelding(m){ return storSet("melding:"+m.id, m); }
+async function saveVerzoek(v){ return storSet("verzoek:"+v.id, v); }
+async function saveIntake(i){ return storSet("intake:"+i.id, i); }
+
+/* ============================ ROOT RENDER ============================ */
+function render(){
+  const app = document.getElementById("app");
+  if(!session){ renderLogin(app); return; }
+  if(session.role === "meldkamer") renderMeldkamer(app);
+  else if(session.role === "hulpdienst") renderHulpdienst(app);
+  else if(session.role === "burger") renderBurger(app);
+  renderSyncNote();
+}
+function renderSyncNote(){
+  let el = document.getElementById("syncNote");
+  if(!el){
+    el = document.createElement("div");
+    el.id = "syncNote";
+    document.body.appendChild(el);
+  }
+  el.className = "sync-note" + (syncOk ? "" : " err");
+  el.textContent = syncOk ? "🟢 Verbonden" : "🟠 Opnieuw verbinden...";
+}
+
+/* ============================ LOGIN ============================ */
+function renderLogin(app){
+  app.innerHTML = `
+    <div class="login-wrap"><div class="login-shell">
+      <div class="brand-hero">
+        <div class="logo">🚨</div>
+        <h1>Meldkamer Systeem 2025</h1>
+        <p>Eén platform voor meldkamer en hulpdiensten — realtime gekoppeld, ongeacht stad of dienst.</p>
+      </div>
+      <div class="role-grid">
+        <div class="role-card" id="btnMeldkamer">
+          <span class="em">🖥️</span>
+          <h3>Meldkamer</h3>
+          <p>Meldingen aanmaken, eenheden inzetten, verzoeken en intakes beoordelen.</p>
+        </div>
+        <div class="role-card" id="btnHulpdienst">
+          <span class="em">🚓</span>
+          <h3>Hulpdiensten</h3>
+          <p>Inloggen als politie, brandweer of ambulance. Inklokken, status doorgeven, melding ontvangen.</p>
+        </div>
+        <div class="role-card" id="btnBurger">
+          <span class="em">🙋</span>
+          <h3>Burger</h3>
+          <p>Wil je aansluiten bij een hulpdienst? Vraag hier een intake aan.</p>
+        </div>
+      </div>
+    </div></div>`;
+  document.getElementById("btnMeldkamer").onclick = () => renderMeldkamerLogin(app);
+  document.getElementById("btnHulpdienst").onclick = () => renderHulpdienstLogin(app);
+  document.getElementById("btnBurger").onclick = () => renderBurgerLogin(app);
+}
+
+function renderMeldkamerLogin(app){
+  app.innerHTML = `
+    <div class="login-wrap"><div class="card">
+      <span class="back-link" id="back">&larr; Terug</span>
+      <h2>Inloggen als Meldkamer</h2>
+      <p class="desc">Vul je standplaats in. Je ziet alle meldingen en eenheden, ongeacht locatie.</p>
+      <div class="field"><label>Standplaats meldkamer</label><input type="text" id="stad" placeholder="bv. Rotterdam"></div>
+      <div class="field"><label>Meldkamer naam / kanaal</label><input type="text" id="naam" value="OC/OPS"></div>
+      <button class="btn wide" id="go">Inloggen</button>
+    </div></div>`;
+  document.getElementById("back").onclick = () => renderLogin(app);
+  document.getElementById("go").onclick = async () => {
+    const stad = document.getElementById("stad").value.trim() || "Onbekend";
+    const naam = document.getElementById("naam").value.trim() || "OC/OPS";
+    session = { role:"meldkamer", stad, naam };
+    await loadState();
+    render();
+    startPolling();
+  };
+}
+
+function renderHulpdienstLogin(app){
+  selectedDienst = null;
+  app.innerHTML = `
+    <div class="login-wrap"><div class="card">
+      <span class="back-link" id="back">&larr; Terug</span>
+      <h2>Inloggen als Hulpdienst</h2>
+      <p class="desc">Kies je dienst en vul je eenheidsgegevens in. Je moet daarna zelf inklokken.</p>
+      <div class="dienst-grid" id="diensten">
+        ${Object.entries(DIENSTEN).map(([k,v])=>`<div class="dienst-opt" data-k="${k}"><span class="em">${v.em}</span>${v.label}</div>`).join("")}
+      </div>
+      <div class="field"><label>Roepnummer / callsign</label><input type="text" id="callsign" placeholder="bv. MD22-01"></div>
+      <div class="field"><label>Standplaats / stad</label><input type="text" id="stad" placeholder="bv. Amsterdam"></div>
+      <button class="btn wide" id="go">Inloggen</button>
+    </div></div>`;
+  document.getElementById("back").onclick = () => renderLogin(app);
+  document.querySelectorAll(".dienst-opt").forEach(el=>{
+    el.onclick = () => { document.querySelectorAll(".dienst-opt").forEach(o=>o.classList.remove("sel")); el.classList.add("sel"); selectedDienst = el.dataset.k; };
+  });
+  document.getElementById("go").onclick = async () => {
+    if(!selectedDienst){ alert("Kies eerst een dienst."); return; }
+    const callsign = document.getElementById("callsign").value.trim();
+    const stad = document.getElementById("stad").value.trim() || "Onbekend";
+    if(!callsign){ alert("Vul een roepnummer in."); return; }
+
+    const goBtn = document.getElementById("go");
+    goBtn.disabled = true; goBtn.textContent = "Bezig met inloggen...";
+
+    await loadState(); // huidige eenheden ophalen, zodat we bestaande callsign herkennen
+    let unit = state.units.find(u => u.callsign.toLowerCase() === callsign.toLowerCase());
+    if(!unit){
+      unit = { id: uid(), dienst: selectedDienst, callsign, stad, status:"Niet Inzetbaar", meldingId:null, ingeklokt:false, klokTijd:null };
+      state.units.push(unit);
+    } else {
+      unit.dienst = selectedDienst; unit.stad = stad;
+    }
+    await saveUnit(unit);
+
+    // Sessie bevat direct alle gegevens: renderen hangt NIET af van een geslaagde
+    // her-ophaal-actie, dus je kunt nooit worden teruggezet naar het beginscherm.
+    session = { role:"hulpdienst", unitId: unit.id, dienst: unit.dienst, callsign: unit.callsign, stad: unit.stad };
+    render();
+    startPolling();
+  };
+}
+
+function renderBurgerLogin(app){
+  app.innerHTML = `
+    <div class="login-wrap"><div class="card">
+      <span class="back-link" id="back">&larr; Terug</span>
+      <h2>Intake aanvragen</h2>
+      <p class="desc">Wil je aansluiten bij een hulpdienst? Vul onderstaande gegevens in. De meldkamer beoordeelt je aanvraag.</p>
+      <div class="field"><label>Naam</label><input type="text" id="naam" placeholder="Je volledige naam"></div>
+      <div class="field"><label>Reden / motivatie</label><textarea id="reden" rows="3" placeholder="Waarom wil je een intake?"></textarea></div>
+      <div class="field"><label>Contact (Discord-naam, e-mail of telefoon)</label><input type="text" id="contact" placeholder="bv. naam#1234"></div>
+      <button class="btn wide" id="go">Intake aanvragen</button>
+    </div></div>`;
+  document.getElementById("back").onclick = () => renderLogin(app);
+  document.getElementById("go").onclick = async () => {
+    const naam = document.getElementById("naam").value.trim();
+    const reden = document.getElementById("reden").value.trim();
+    const contact = document.getElementById("contact").value.trim();
+    if(!naam || !contact){ alert("Vul in ieder geval je naam en contactgegevens in."); return; }
+    const intake = { id: uid(), naam, reden, contact, tijd: nowTime(), status:"wachtend", discord:"", afwijsreden:"" };
+    await saveIntake(intake);
+    state.intakes.push(intake);
+    session = { role:"burger", intakeId: intake.id };
+    render();
+    startPolling();
+  };
+}
+
+function startPolling(){
+  if(pollTimer) clearInterval(pollTimer);
+  pollTimer = setInterval(async () => {
+    if(!session) return;
+    await loadState();
+    if(!session) return;
+    if(session.role==="meldkamer") updateMeldkamerLiveParts();
+    if(session.role==="hulpdienst") updateHulpdienstLiveParts();
+    if(session.role==="burger") updateBurgerLiveParts();
+    renderSyncNote();
+  }, 3000);
+}
+function logout(){
+  session = null;
+  if(pollTimer) clearInterval(pollTimer);
+  const note = document.getElementById("syncNote"); if(note) note.remove();
+  render();
+}
+
+/* ============================ MELDKAMER VIEW ============================ */
+function renderMeldkamer(app){
+  app.innerHTML = `
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="brand">🖥️ Meldkamer Systeem <span class="sub">Made By Lars B.</span></div>
+        <span class="pill">${escapeHtml(session.naam)} — ${escapeHtml(session.stad)}</span>
+      </div>
+      <div class="topbar-right">
+        <span class="clock" id="clock"></span>
+        <button class="icon-only-btn" id="logout">Uitloggen</button>
+      </div>
+    </div>
+    <div class="board">
+      <div class="stack">
+        <div class="panel">
+          <div class="panel-head"><span>⚠️ Openstaande Meldingen</span><button class="icon-btn" id="newMelding">+</button></div>
+          <div class="drag-hint">Sleep een ingeklokte eenheid hierop om toe te wijzen.</div>
+          <div class="panel-body" id="openstaand"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><span>✅ Uitgegeven Meldingen</span></div>
+          <div class="panel-body" id="uitgegeven"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span>👥 Eenheden</span><span class="count" id="ukount"></span></div>
+        <div class="panel-body tall" id="eenheden"></div>
+      </div>
+      <div class="stack">
+        <div class="panel">
+          <div class="panel-head"><span>📨 Verzoeken</span></div>
+          <div class="panel-body" id="verzoeken"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><span>🙋 Intake Aanvragen</span></div>
+          <div class="panel-body" id="intakes"></div>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById("logout").onclick = logout;
+  document.getElementById("newMelding").onclick = openNewMeldingModal;
+  updateMeldkamerLiveParts();
+}
+
+function updateMeldkamerLiveParts(){
+  if(!session || session.role!=="meldkamer") return;
+  const clock = document.getElementById("clock");
+  if(clock) clock.textContent = new Date().toLocaleString('nl-NL');
+
+  const open = state.meldingen.filter(m=>m.status==="openstaand");
+  const uitg = state.meldingen.filter(m=>m.status==="uitgegeven");
+
+  const openEl = document.getElementById("openstaand");
+  if(openEl){
+    openEl.innerHTML = open.length ? open.map(m=>`
+      <div class="melding-card" data-melding="${m.id}" onclick="window.__openUnitPicker('${m.id}')">
+        <div class="m-top"><span>${escapeHtml(m.locatie)||'Onbekende locatie'}</span><span>${m.tijd}</span></div>
+        <div class="m-tekst">${escapeHtml(m.tekst)}</div>
+        <div class="m-tags">Kanaal: ${escapeHtml(m.kanaal)||'-'}</div>
+      </div>`).join("") : `<div class="empty-hint">Geen openstaande meldingen.<br>Klik + om een melding te maken.</div>`;
+    openEl.querySelectorAll(".melding-card").forEach(card=>{
+      card.addEventListener("dragover", e=>{ e.preventDefault(); card.classList.add("drag-over"); });
+      card.addEventListener("dragleave", ()=> card.classList.remove("drag-over"));
+      card.addEventListener("drop", async e=>{
+        e.preventDefault(); card.classList.remove("drag-over");
+        const unitId = e.dataTransfer.getData("text/plain");
+        if(unitId) await assignUnitToMelding(unitId, card.dataset.melding);
+      });
+    });
+  }
+
+  const uitgEl = document.getElementById("uitgegeven");
+  if(uitgEl){
+    uitgEl.innerHTML = uitg.length ? uitg.map(m=>{
+      const u = state.units.find(u=>u.id===m.unitId);
+      return `<div class="melding-card uitgegeven">
+        <div class="m-top"><span>${escapeHtml(m.locatie)||'Onbekende locatie'}</span><span>${m.tijd}</span></div>
+        <div class="m-tekst">${escapeHtml(m.tekst)}</div>
+        <div class="m-tags">Eenheid: ${u? DIENSTEN[u.dienst].em+' '+escapeHtml(u.callsign)+' ('+escapeHtml(u.stad)+')':'-'}</div>
+      </div>`;
+    }).join("") : `<div class="empty-hint">Nog geen meldingen uitgegeven.</div>`;
+  }
+
+  const ingeklokt = state.units.filter(u=>u.ingeklokt);
+  const kountEl = document.getElementById("ukount");
+  if(kountEl) kountEl.textContent = `${ingeklokt.length} ingeklokt`;
+  const uEl = document.getElementById("eenheden");
+  if(uEl){
+    uEl.innerHTML = state.units.length ? state.units.map(u=>`
+      <div class="unit-row" draggable="${u.ingeklokt ? 'true':'false'}" data-unit="${u.id}" style="${u.ingeklokt?'':'opacity:.45;'}">
+        <div class="u-left">
+          <span class="unit-em">${DIENSTEN[u.dienst].em}</span>
+          <div>
+            <div class="u-name">${escapeHtml(u.callsign)} ${u.ingeklokt? '' : '<span style="color:var(--muted-2); font-weight:400;">(uitgeklokt)</span>'}</div>
+            <div class="u-sub">${DIENSTEN[u.dienst].label} — ${escapeHtml(u.stad)}</div>
+          </div>
+        </div>
+        <span class="u-status ${statusClass(u.status)}">${u.status}</span>
+      </div>`).join("") : `<div class="empty-hint">Nog geen eenheden ingelogd.</div>`;
+    uEl.querySelectorAll(".unit-row").forEach(row=>{
+      row.addEventListener("dragstart", e=>{
+        e.dataTransfer.setData("text/plain", row.dataset.unit);
+        row.classList.add("dragging");
+      });
+      row.addEventListener("dragend", ()=> row.classList.remove("dragging"));
+    });
+  }
+
+  const vEl = document.getElementById("verzoeken");
+  if(vEl){
+    const list = [...state.verzoeken].sort((a,b)=> (b.ts||0)-(a.ts||0)).slice(0,25);
+    vEl.innerHTML = list.length ? list.map(v=>{
+      const titel = v.type==='noodknop'?'🔴 NOODKNOP':(v.type==='spraak_urgent'?'🗣️ Spraakaanvraag URGENT':'🗣️ Spraakaanvraag');
+      const cls = v.type==='noodknop'?'nood':(v.status==='goedgekeurd'?'goedgekeurd':(v.status==='afgewezen'?'afgewezen':''));
+      let actions = '';
+      if(v.status==='wachtend'){
+        actions = `<div class="req-actions">
+          <button class="btn small teal" onclick="window.__approveVerzoek('${v.id}')">Goedkeuren</button>
+          <button class="btn small red" onclick="window.__denyVerzoek('${v.id}')">Afwijzen</button>
+        </div>`;
+      } else if(v.status==='goedgekeurd' && v.discord){
+        actions = `<div style="margin-top:6px; font-size:11px; color:var(--muted);">Discord: ${linkify(v.discord)}</div>`;
+      }
+      return `<div class="req-item ${cls}">
+        <b>${titel} — ${escapeHtml(v.callsign)}</b>${v.tijd}
+        <span class="status-tag ${v.status}">${v.status}</span>
+        ${actions}
+      </div>`;
+    }).join("") : `<div class="empty-hint">Geen verzoeken.</div>`;
+  }
+
+  const iEl = document.getElementById("intakes");
+  if(iEl){
+    const list = [...state.intakes].sort((a,b)=> (b.ts||0)-(a.ts||0));
+    iEl.innerHTML = list.length ? list.map(i=>{
+      let actions = '';
+      if(i.status==='wachtend'){
+        actions = `<div class="req-actions">
+          <button class="btn small teal" onclick="window.__approveIntake('${i.id}')">Goedkeuren</button>
+          <button class="btn small red" onclick="window.__denyIntake('${i.id}')">Afwijzen</button>
+        </div>`;
+      } else if(i.status==='goedgekeurd' && i.discord){
+        actions = `<div style="margin-top:6px; font-size:11px; color:var(--muted);">Discord: ${linkify(i.discord)}</div>`;
+      } else if(i.status==='afgewezen' && i.afwijsreden){
+        actions = `<div style="margin-top:6px; font-size:11px; color:var(--muted);">Reden: ${escapeHtml(i.afwijsreden)}</div>`;
+      }
+      return `<div class="req-item ${i.status==='goedgekeurd'?'goedgekeurd':(i.status==='afgewezen'?'afgewezen':'')}">
+        <b>${escapeHtml(i.naam)}</b>${i.tijd} — <span style="color:var(--muted);">${escapeHtml(i.contact)}</span>
+        <div style="margin-top:4px;">${i.reden ? escapeHtml(i.reden) : '<span style="color:var(--muted-2);">Geen reden opgegeven</span>'}</div>
+        <span class="status-tag ${i.status}">${i.status}</span>
+        ${actions}
+      </div>`;
+    }).join("") : `<div class="empty-hint">Geen intake-aanvragen.</div>`;
+  }
+}
+
+async function assignUnitToMelding(unitId, meldingId){
+  const melding = state.meldingen.find(x=>x.id===meldingId);
+  const unit = state.units.find(x=>x.id===unitId);
+  if(!melding || !unit) return;
+  if(!unit.ingeklokt){ alert("Deze eenheid is uitgeklokt en kan niet worden ingezet."); return; }
+  melding.status = "uitgegeven";
+  melding.unitId = unit.id;
+  unit.meldingId = melding.id;
+  unit.status = "Aanrijdend";
+  await Promise.all([saveMelding(melding), saveUnit(unit)]);
+  updateMeldkamerLiveParts();
+}
+
+window.__openUnitPicker = function(meldingId){
+  const ingeklokt = state.units.filter(u=>u.ingeklokt);
+  const bg = document.createElement("div");
+  bg.className = "modal-bg";
+  bg.innerHTML = `<div class="modal">
+    <h3>Wijs eenheid toe</h3>
+    <p style="color:var(--muted); font-size:13px;">Je kunt ook direct een eenheid naar deze melding slepen.</p>
+    <div class="field"><label>Ingeklokte eenheid</label>
+      <select id="unitSel"><option value="">— Kies eenheid —</option>
+        ${ingeklokt.map(u=>`<option value="${u.id}">${DIENSTEN[u.dienst].label} ${u.callsign} (${u.stad})</option>`).join("")}
+      </select>
+    </div>
+    <div class="modal-actions"><button class="btn ghost" id="cancel">Sluiten</button><button class="btn" id="ok">Toewijzen</button></div>
+  </div>`;
+  document.body.appendChild(bg);
+  bg.querySelector("#cancel").onclick = () => bg.remove();
+  bg.querySelector("#ok").onclick = async () => {
+    const uidSel = bg.querySelector("#unitSel").value;
+    if(uidSel) await assignUnitToMelding(uidSel, meldingId);
+    bg.remove();
+  };
+};
+
+function openNewMeldingModal(){
+  const bg = document.createElement("div");
+  bg.className = "modal-bg";
+  bg.innerHTML = `<div class="modal">
+    <h3>Nieuwe melding</h3>
+    <div class="field"><label>Melding</label><textarea id="mTekst" rows="3" placeholder="Omschrijving van de melding"></textarea></div>
+    <div class="field"><label>Locatie</label><input id="mLocatie" placeholder="bv. Damrak 1, Amsterdam"></div>
+    <div class="field"><label>Incidentenkanaal</label><input id="mKanaal" placeholder="bv. Kanaal 3"></div>
+    <div class="modal-actions"><button class="btn ghost" id="cancel">Annuleren</button><button class="btn" id="save">Opslaan</button></div>
+  </div>`;
+  document.body.appendChild(bg);
+  bg.querySelector("#cancel").onclick = () => bg.remove();
+  bg.querySelector("#save").onclick = async () => {
+    const tekst = bg.querySelector("#mTekst").value.trim();
+    if(!tekst){ alert("Vul een omschrijving in."); return; }
+    const melding = { id: uid(), ts: Date.now(), tekst, locatie: bg.querySelector("#mLocatie").value.trim(),
+      kanaal: bg.querySelector("#mKanaal").value.trim(), tijd: nowTime(), status:"openstaand", unitId:null };
+    state.meldingen.push(melding);
+    await saveMelding(melding);
+    bg.remove();
+    updateMeldkamerLiveParts();
+  };
+}
+
+function askDiscordThen(callback){
+  const bg = document.createElement("div");
+  bg.className = "modal-bg";
+  bg.innerHTML = `<div class="modal">
+    <h3>Goedkeuren</h3>
+    <div class="field"><label>Discord-uitnodiging / instructie</label><input id="discordLink" placeholder="bv. https://discord.gg/xxxxx"></div>
+    <div class="modal-actions"><button class="btn ghost" id="cancel">Annuleren</button><button class="btn teal" id="ok">Goedkeuren</button></div>
+  </div>`;
+  document.body.appendChild(bg);
+  bg.querySelector("#cancel").onclick = () => bg.remove();
+  bg.querySelector("#ok").onclick = () => { const link = bg.querySelector("#discordLink").value.trim(); bg.remove(); callback(link); };
+}
+function askRedenThen(callback){
+  const bg = document.createElement("div");
+  bg.className = "modal-bg";
+  bg.innerHTML = `<div class="modal">
+    <h3>Afwijzen</h3>
+    <div class="field"><label>Reden (optioneel)</label><input id="reden" placeholder="bv. Onvoldoende gegevens"></div>
+    <div class="modal-actions"><button class="btn ghost" id="cancel">Annuleren</button><button class="btn red" id="ok">Afwijzen</button></div>
+  </div>`;
+  document.body.appendChild(bg);
+  bg.querySelector("#cancel").onclick = () => bg.remove();
+  bg.querySelector("#ok").onclick = () => { const reden = bg.querySelector("#reden").value.trim(); bg.remove(); callback(reden); };
+}
+
+window.__approveVerzoek = function(id){
+  askDiscordThen(async (discord) => {
+    const v = state.verzoeken.find(x=>x.id===id);
+    if(v){ v.status = "goedgekeurd"; v.discord = discord; await saveVerzoek(v); updateMeldkamerLiveParts(); }
+  });
+};
+window.__denyVerzoek = async function(id){
+  const v = state.verzoeken.find(x=>x.id===id);
+  if(v){ v.status = "afgewezen"; await saveVerzoek(v); updateMeldkamerLiveParts(); }
+};
+window.__approveIntake = function(id){
+  askDiscordThen(async (discord) => {
+    const i = state.intakes.find(x=>x.id===id);
+    if(i){ i.status = "goedgekeurd"; i.discord = discord; await saveIntake(i); updateMeldkamerLiveParts(); }
+  });
+};
+window.__denyIntake = function(id){
+  askRedenThen(async (reden) => {
+    const i = state.intakes.find(x=>x.id===id);
+    if(i){ i.status = "afgewezen"; i.afwijsreden = reden; await saveIntake(i); updateMeldkamerLiveParts(); }
+  });
+};
+
+/* ============================ HULPDIENST VIEW ============================ */
+function renderHulpdienst(app){
+  // Header-info komt uit de sessie zelf, dus dit werkt altijd meteen,
+  // ook al is de eenheid nog niet (opnieuw) uit de database opgehaald.
+  const s = session;
+  app.innerHTML = `
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="brand">${DIENSTEN[s.dienst].em} ${escapeHtml(s.callsign)} <span class="sub">— ${escapeHtml(s.stad)}</span></div>
+        <span class="pill" id="klokPill">Laden...</span>
+      </div>
+      <div class="topbar-right">
+        <button class="klokbtn uit" id="klokBtn">Inklokken</button>
+        <button class="icon-only-btn" id="logout">Uitloggen</button>
+      </div>
+    </div>
+    <div class="grid3">
+      <div class="panel">
+        <div class="panel-head"><span>⚠️ Melding</span></div>
+        <div id="banners"></div>
+        <div class="panel-body tall" id="meldingView"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span>📝 Kladblok</span></div>
+        <textarea class="kladblok" id="kladblok" placeholder="Maak hier notities aan."></textarea>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span>${DIENSTEN[s.dienst].em} ${escapeHtml(s.callsign)}</span><span style="color:var(--muted); font-weight:400;">${escapeHtml(s.stad)}</span></div>
+        <div class="status-grid" id="statusGrid"></div>
+      </div>
+    </div>`;
+  document.getElementById("logout").onclick = logout;
+  document.getElementById("klokBtn").onclick = toggleKlok;
+  buildStatusGrid();
+  updateHulpdienstLiveParts();
+}
+
+function buildStatusGrid(){
+  const grid = document.getElementById("statusGrid");
+  if(!grid) return;
+  const items = [
+    {label:"Inzetbaar", em:"✅", status:"Inzetbaar"},
+    {label:"Aanrijdend", em:"🚗", status:"Aanrijdend"},
+    {label:"Ter Plaatse", em:"📍", status:"Ter Plaatse"},
+    {label:"Niet Inzetbaar", em:"⛔", status:"Niet Inzetbaar"},
+    {label:"Retour", em:"↩️", status:"Retour"},
+    {label:"Spraakaanvraag", em:"🗣️", verzoek:"spraak"},
+    {label:"Spraak URGENT", em:"🗣️❗", verzoek:"spraak_urgent"},
+    {label:"Eigen Initiatief", em:"⭐", status:"Eigen Initiatief"},
+    {label:"NOODKNOP", em:"🔴", verzoek:"noodknop", nood:true},
+  ];
+  grid.innerHTML = items.map((it,i)=>`<div class="status-btn ${it.nood?'nood':''}" data-i="${i}" data-label="${it.label}"><span class="b-em">${it.em}</span>${it.label}</div>`).join("");
+  grid.querySelectorAll(".status-btn").forEach((el,i)=>{
+    el.onclick = async () => {
+      el.classList.add("pressed");
+      setTimeout(()=>el.classList.remove("pressed"), 350);
+      const it = items[i];
+      if(it.status) await setUnitStatus(it.status);
+      else if(it.verzoek) await sendVerzoek(it.verzoek);
+    };
+  });
+}
+
+async function toggleKlok(){
+  const u = state.units.find(x=>x.id===session.unitId);
+  if(!u) return;
+  u.ingeklokt = !u.ingeklokt;
+  u.klokTijd = u.ingeklokt ? nowTime() : u.klokTijd;
+  if(!u.ingeklokt) u.status = "Niet Inzetbaar";
+  else if(u.status === "Niet Inzetbaar") u.status = "Inzetbaar";
+  await saveUnit(u);
+  showToast(u.ingeklokt ? "Ingeklokt!" : "Uitgeklokt.");
+  updateHulpdienstLiveParts();
+}
+async function setUnitStatus(status){
+  const u = state.units.find(x=>x.id===session.unitId);
+  if(u && u.ingeklokt){
+    u.status = status;
+    await saveUnit(u);
+    showToast("Status aangepast!");
+    updateHulpdienstLiveParts();
+  } else if(u && !u.ingeklokt){
+    alert("Je moet eerst inklokken voordat je je status kan aanpassen.");
+  }
+}
+async function sendVerzoek(type){
+  const u = state.units.find(x=>x.id===session.unitId);
+  if(!u){ alert("Even geduld, je gegevens worden nog geladen."); return; }
+  const v = { id: uid(), ts: Date.now(), unitId:u.id, callsign:u.callsign, type, tijd: nowTime(), status:"wachtend", discord:"" };
+  state.verzoeken.push(v);
+  await saveVerzoek(v);
+  showToast(type==="noodknop" ? "Noodknop verzonden!" : "Verzoek verzonden!");
+  updateHulpdienstLiveParts();
+}
+function showToast(msg){
+  const t = document.createElement("div"); t.className = "toast"; t.textContent = msg;
+  document.body.appendChild(t); setTimeout(()=>t.remove(), 2700);
+}
+
+function updateHulpdienstLiveParts(){
+  if(!session || session.role!=="hulpdienst") return;
+  const u = state.units.find(x=>x.id===session.unitId);
+
+  const klokPill = document.getElementById("klokPill");
+  const klokBtn = document.getElementById("klokBtn");
+  if(!u){
+    if(klokPill){ klokPill.textContent = "Gegevens laden..."; klokPill.className = "pill off"; }
+    return; // wacht rustig op de volgende sync-ronde, geen navigatie
+  }
+  if(klokPill){ klokPill.textContent = u.ingeklokt ? `Ingeklokt sinds ${u.klokTijd||''}` : "Uitgeklokt"; klokPill.className = "pill " + (u.ingeklokt ? "on":"off"); }
+  if(klokBtn){ klokBtn.textContent = u.ingeklokt ? "Uitklokken" : "Inklokken"; klokBtn.className = "klokbtn " + (u.ingeklokt ? "in":"uit"); }
+
+  document.querySelectorAll("#statusGrid .status-btn").forEach(el=>{
+    el.classList.toggle("active", el.dataset.label === u.status);
+  });
+
+  const mView = document.getElementById("meldingView");
+  if(mView){
+    const m = u.meldingId ? state.meldingen.find(x=>x.id===u.meldingId) : null;
+    mView.innerHTML = m ? `<div class="melding-view">
+<span class="lbl">Locatie</span><br>${escapeHtml(m.locatie||'-')}<br><br>
+<span class="lbl">Incidentenkanaal</span><br>${escapeHtml(m.kanaal||'-')}<br><br>
+<span class="lbl">Tijd</span><br>${m.tijd}<br><br>
+<span class="lbl">Omschrijving</span><br>${escapeHtml(m.tekst)}
+      </div>` : `<div class="empty-hint" style="padding:16px;">Geen melding toegewezen.</div>`;
+  }
+
+  const bannersEl = document.getElementById("banners");
+  if(bannersEl){
+    const mine = state.verzoeken.filter(v=>v.unitId===u.id).sort((a,b)=>(b.ts||0)-(a.ts||0));
+    const recent = mine[0];
+    let html = "";
+    if(recent && recent.status==="goedgekeurd"){
+      html += `<div class="banner">Je verzoek is goedgekeurd. ${recent.discord ? 'Praat verder via Discord: '+linkify(recent.discord) : 'Praat verder via Discord.'}</div>`;
+    } else if(recent && recent.status==="afgewezen"){
+      html += `<div class="banner warn">Je verzoek is afgewezen.</div>`;
+    }
+    bannersEl.innerHTML = html;
+  }
+}
+
+/* ============================ BURGER VIEW ============================ */
+function renderBurger(app){
+  app.innerHTML = `
+    <div class="login-wrap"><div class="card" style="text-align:center;">
+      <div id="burgerBody"></div>
+      <button class="btn ghost wide" id="terug" style="margin-top:20px;">Terug naar login</button>
+    </div></div>`;
+  document.getElementById("terug").onclick = logout;
+  updateBurgerLiveParts();
+}
+function updateBurgerLiveParts(){
+  if(!session || session.role!=="burger") return;
+  const body = document.getElementById("burgerBody");
+  if(!body) return;
+  const i = state.intakes.find(x=>x.id===session.intakeId);
+  if(!i){
+    body.innerHTML = `<div class="spinner"></div><p class="desc">Gegevens laden...</p>`;
+    return;
+  }
+  if(i.status==="wachtend"){
+    body.innerHTML = `<div class="spinner"></div>
+      <h2>Wachten op goedkeuring...</h2>
+      <p class="desc">Je intake-aanvraag is verzonden. Zodra de meldkamer reageert, zie je dat hier direct verschijnen.</p>`;
+  } else if(i.status==="goedgekeurd"){
+    body.innerHTML = `<h2 style="color:var(--teal);">✅ Goedgekeurd!</h2>
+      <p class="desc">Je intake is goedgekeurd. Praat verder via Discord:</p>
+      <p style="font-size:15px; font-weight:700;">${i.discord ? linkify(i.discord) : 'De meldkamer neemt contact op.'}</p>`;
+  } else if(i.status==="afgewezen"){
+    body.innerHTML = `<h2 style="color:var(--red);">❌ Afgewezen</h2>
+      <p class="desc">Je intake-aanvraag is helaas afgewezen.${i.afwijsreden ? ' Reden: '+escapeHtml(i.afwijsreden) : ''}</p>`;
+  }
+}
+
+/* ============================ INIT ============================ */
+render();
+</script>
+</body>
+</html>
